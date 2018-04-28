@@ -65,7 +65,7 @@ class Path2Path implements P2PI
                 "responses" => [
                     "200" => [
                         "description" => "",
-                        "application/json" => new stdClass()
+                        "content" => ["application/json" => new stdClass()]
                     ]
                 ]
             ];
