@@ -59,6 +59,28 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
+                $this->makeRoute('#^/request/{id}/$#u', ['GET']),
+                [
+                    "/request/{id}/" => [
+                        "description" => "",
+                        "get" => [
+                            "responses" => [
+                                "200" => [
+                                    "description" => "",
+                                    "application/json" => new stdClass()
+                                ]
+                            ]
+                        ],
+                        "parameters" => [
+                            [
+                                "name" => "id",
+                                "in" => "path"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
                 $this->makeRoute('/admin/:controller/a/:action/:params/', ['GET']),
                 [
                     "/admin/{controller}/a/{action}/" => [

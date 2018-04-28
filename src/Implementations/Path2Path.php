@@ -2,9 +2,11 @@
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path as P2PI;
 use Phalcon\Mvc\Router\RouteInterface;
+use stdClass;
 
-class Path2Path implements \De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path
+class Path2Path implements P2PI
 {
     public function convert(RouteInterface $route):array
     {
@@ -20,7 +22,11 @@ class Path2Path implements \De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Pat
                 '{namespace:([a-zA-Z0-9\_\-]+)}',
                 '([0-9]+)'
             ],
-            preg_replace('/:params\/?$/', '', $route->getCompiledPattern())
+            preg_replace(
+                '/:params\/?$/',
+                '',
+                preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getCompiledPattern())
+            )
         );
         if (preg_match_all('/\{(.+?)\}/', $path, $matches)) {
             foreach ($matches[1] as $match) {
@@ -59,7 +65,7 @@ class Path2Path implements \De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Pat
                 "responses" => [
                     "200" => [
                         "description" => "",
-                        "application/json" => new \stdClass()
+                        "application/json" => new stdClass()
                     ]
                 ]
             ];
