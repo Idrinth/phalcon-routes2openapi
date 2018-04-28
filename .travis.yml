@@ -8,14 +8,11 @@ branches:
   only:
   - master
   - /[0-9]+\.[0-9]+\.[0-9]+/
-cache:
-  directories:
-    - ~/cphalcon
 git:
   depth: 3
 before_install:
   - mkdir tools && composer init --name=putg/tools --working-dir=tools
-  - composer require techpivot/phalcon-ci-installer:~1.0 --working-dir=tools && tools/vendor/bin/install-phalcon.sh 3.2.x
+  - curl -s https://packagecloud.io/install/repositories/phalcon/stable/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install php7.0-phalcon
 # no need to check for unsafe assumptions multiple times
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require rskuipers/php-assumptions:^0.7.0 --working-dir=tools ; fi
 # no need to provide coverage more than once and no need for the speedbump otherwise
