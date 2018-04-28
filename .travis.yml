@@ -1,16 +1,9 @@
 language: php
 dist: trusty
 php:
-  - '5.4'
-  - '5.5'
-  - '5.6'
   - '7.0'
   - '7.1'
   - '7.2'
-matrix:
-  include:
-    - php: "5.3"
-      dist: precise
 branches:
   only:
   - master
@@ -20,7 +13,7 @@ git:
 before_install:
   - mkdir tools && composer init --name=putg/tools --working-dir=tools
 # no need to check for unsafe assumptions multiple times
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then composer require rskuipers/php-assumptions:^0.7.0 --working-dir=tools ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require rskuipers/php-assumptions:^0.7.0 --working-dir=tools ; fi
 # no need to provide coverage more than once and no need for the speedbump otherwise
   - if [[ ${TRAVIS_PHP_VERSION:0:3} != "7.1" ]]; then phpenv config-rm xdebug.ini || true ; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then composer require codacy/coverage:dev-master --working-dir=tools ; fi
@@ -31,7 +24,7 @@ before_install:
 install: composer update
 script:
 # check assertions
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then tools/vendor/bin/phpa --exclude=vendor,tools ./ ; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then tools/vendor/bin/phpa --exclude=vendor,tools ./ ; fi
 # check standards
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then tools/vendor/bin/phpcs -p --standard=PSR2 src test bin ; fi
 # unit tests
