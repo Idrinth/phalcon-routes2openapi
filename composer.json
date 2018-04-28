@@ -1,0 +1,27 @@
+{
+    "name": "idrinth/phalcon-routes2openapi",
+    "authors": [
+        {
+            "name": "Björn Büttner",
+            "homepage": "https://github.com/idrinth"
+        }
+    ],
+    "require": {
+        "php": "^7",
+        "ext-phalcon": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "De\\Idrinth\\PhalconRoutes2OpenApi\\": "src"
+        }
+    },
+    "require-dev": {
+        "phalcon/ide-stubs": "^3.2",
+        "phpunit/phpunit": "^6.5.7"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "De\\Idrinth\\Test\\PhalconRoutes2OpenApi\\": "test"
+        }
+    }
+}
