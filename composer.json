@@ -1,5 +1,6 @@
 {
     "name": "idrinth/phalcon-routes2openapi",
+    "license": "MIT",
     "authors": [
         {
             "name": "Björn Büttner",
