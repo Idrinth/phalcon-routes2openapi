@@ -12,7 +12,7 @@ class Path2PathTest extends TestCase
     private function makeRoute(string $path, array $methods, bool $hasUnnamed = false, array $config = array()):RouteInterface
     {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
-        $route->expects($this->once())->method('getCompiledPattern')->with()->willReturn($path);
+        $route->expects($this->once())->method('getPattern')->with()->willReturn($path);
         $route->expects($this->once())->method('getHttpMethods')->with()->willReturn($methods);
         $route->expects($this->exactly($hasUnnamed?1:0))->method('getReversedPaths')->with()->willReturn($config);
         return $route;

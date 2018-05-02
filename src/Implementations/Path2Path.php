@@ -23,9 +23,9 @@ class Path2Path implements P2PI
                 '([0-9]+)'
             ],
             preg_replace(
-                '/:params\/?$/',
+                '/:params:?\/?$/',
                 '',
-                preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getCompiledPattern())
+                preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getPattern())
             )
         );
         if (preg_match_all('/\{(.+?)\}/', $path, $matches)) {

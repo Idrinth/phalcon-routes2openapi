@@ -1,6 +1,9 @@
 {
     "name": "idrinth/phalcon-routes2openapi",
+    "description": "Generates an JSON represantation of the routes registered via phalcon in an OpenAPI-compatible way.",
     "license": "MIT",
+    "keywords": ["rest", "api", "routes", "documentation"],
+    "homepage": "https://github.com/idrinth/phalcon-routes2openapi/",
     "authors": [
         {
             "name": "Björn Büttner",
