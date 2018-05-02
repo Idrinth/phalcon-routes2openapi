@@ -36,7 +36,7 @@ class ControllerTest extends TestCase
                 [
                     "openapi" => "3.0.1",
                     "info" => [
-                        "title" => "example",
+                        "title" => "unknown",
                         "version" => "1.0.0"
                     ],
                     "paths" => [

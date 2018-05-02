@@ -13,6 +13,7 @@ git:
 cache:
     directories:
      - /home/travis/cphalcon
+     - /home/travis/.composer
 before_install:
   - mkdir ../phalcon && composer init --name=pr2oa/phalcon --working-dir=../phalcon && composer require techpivot/phalcon-ci-installer:^1.0.7 --working-dir=../phalcon && ln -s ../phalcon/vendor && ../phalcon/vendor/bin/install-phalcon.sh 3.2.x && rm vendor
   - mkdir ../tools && composer init --name=pr2oa/tools --working-dir=../tools

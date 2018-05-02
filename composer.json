@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": "^7",
-        "ext-phalcon": "^3.2"
+        "ext-phalcon": "^3.2",
+        "phpdocumentor/reflection-docblock": "^4.3.0"
     },
     "autoload": {
         "psr-4": {

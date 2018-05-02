@@ -50,8 +50,8 @@ class Path2Path implements P2PI
             foreach ($matches[1] as $pos => $match) {
                 $name = $names[$pos+1];
                 $openapi['parameters'][] = [
-                    'in' => 'path',
                     'name' => $name,
+                    'in' => 'path',
                     'schema' => [
                         'type' => 'string',
                         'pattern' => $match

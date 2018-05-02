@@ -13,7 +13,7 @@ class Controller extends PhalconController implements ControllerInterface
     private static $body = [
         "openapi"=> "3.0.1",
         "info"=> [
-          "title"=> "example",
+          "title"=> "unknown",
           "version"=> "1.0.0"
         ]
       ];
@@ -23,7 +23,12 @@ class Controller extends PhalconController implements ControllerInterface
         foreach($this->router->getRoutes() as $route) {
             $paths[] = $this->di->get(P2PI::class)->convert($route);
         }
-        return $this->response->setJsonContent(array_merge(self::$body, ['paths' => array_merge(...$paths)]));
+        $project = (new Composer())(dirname(__DIR__, 4).'/composer.json');
+        return $this->response->setJsonContent(array_merge_recursive(
+            self::$body,
+            ['paths' => array_merge(...$paths)],
+            ['info' => $project]
+        ));
     }
 
     public function indexAction(): ResponseInterface

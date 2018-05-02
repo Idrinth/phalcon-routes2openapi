@@ -29,7 +29,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ]
@@ -45,7 +47,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -67,7 +71,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -89,7 +95,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -123,7 +131,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -149,7 +159,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -175,7 +187,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -209,7 +223,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ],
@@ -217,7 +233,9 @@ class Path2PathTest extends TestCase
                             "responses" => [
                                 "200" => [
                                     "description" => "",
-                                    "application/json" => new stdClass()
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
                                 ]
                             ]
                         ]
