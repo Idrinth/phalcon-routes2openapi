@@ -10,10 +10,12 @@ branches:
   - /[0-9]+\.[0-9]+\.[0-9]+/
 git:
   depth: 3
+cache:
+    directories:
+     - /home/travis/cphalcon/cache
 before_install:
   - mkdir ../phalcon && composer init --name=pr2oa/phalcon --working-dir=../phalcon && composer require techpivot/phalcon-ci-installer:^1.0.7 --working-dir=../phalcon && ln -s ../phalcon/vendor && ../phalcon/vendor/bin/install-phalcon.sh 3.2.x && rm vendor
   - mkdir ../tools && composer init --name=pr2oa/tools --working-dir=../tools
-  - cd ../tools && composer require techpivot/phalcon-ci-installer:~1.0 && vendor/bin/install-phalcon.sh 3.2.x && cd ~
 # no need to check for unsafe assumptions multiple times
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools ; fi
 # no need to provide coverage more than once and no need for the speedbump otherwise
