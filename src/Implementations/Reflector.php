@@ -47,7 +47,7 @@ class Reflector
         foreach ($docBlock->getTags() as $tag) {
             if(preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches)) {
                 $parts = explode(" ", "$tag", 2);
-                $data[$matches[1]] = $this->arrayMergeRecursiveNoConversion(
+                $data[$matches[1]] = Merger::arrayMergeRecursiveNoConversion(
                     $data[$matches[1]]??[],
                     [
                         "description" => '',
@@ -63,23 +63,5 @@ class Reflector
             "summary" => $docBlock->getSummary(),
             "responses" => $data
         ];
-    }
-    private function handleValueMerge(array $array1, $value, $key)
-    {
-        if (!isset($array1[$key])) {
-            return $value;
-        }
-        if (is_array($value) && is_array($array1[$key])) {
-            return $this->arrayMergeRecursiveNoConversion($array1[$key], $value);
-        }
-        return $value;
-    }
-    private function arrayMergeRecursiveNoConversion(array $array1, array $array2)
-    {
-      foreach ($array2 as $key => $value)
-      {
-        $array1[$key] = $this->handleValueMerge($array1, $value, $key);
-      }
-      return $array1;
     }
 }

@@ -23,11 +23,10 @@ class Controller extends PhalconController implements ControllerInterface
         foreach($this->router->getRoutes() as $route) {
             $paths[] = $this->di->get(P2PI::class)->convert($route);
         }
-        $project = (new Composer())(dirname(__DIR__, 4).'/composer.json');
-        return $this->response->setJsonContent(array_merge_recursive(
+        $project = (new Composer())(dirname(__DIR__, 5).'/composer.json');
+        return $this->response->setJsonContent(Merger::arrayMergeRecursiveNoConversion(
             self::$body,
-            ['paths' => array_merge(...$paths)],
-            ['info' => $project]
+            ['paths' => array_merge(...$paths), 'info' => $project]
         ));
     }
 
