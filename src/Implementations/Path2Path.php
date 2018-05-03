@@ -60,15 +60,9 @@ class Path2Path implements P2PI
                 $path = preg_replace('/'.preg_quote('('.$match.')', '/').'/', '{'.$name.'}', $path, 1);
             }
         }
+        $data = (new Reflector())($route->getPaths()['controller'],$route->getPaths()['action']);
         foreach ((array)$route->getHttpMethods() as $method) {
-            $openapi[strtolower($method)] = [
-                "responses" => [
-                    "200" => [
-                        "description" => "",
-                        "content" => ["application/json" => new stdClass()]
-                    ]
-                ]
-            ];
+            $openapi[strtolower($method)] = Merger::arrayMergeRecursiveNoConversion($openapi[strtolower($method)]??[], $data);
         }
         ksort($openapi);
         return [$path => $openapi];

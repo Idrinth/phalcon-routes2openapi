@@ -17,6 +17,10 @@ class Controller extends PhalconController implements ControllerInterface
           "version"=> "1.0.0"
         ]
       ];
+    /**
+     * @return-200 application/json {"type":"object"}
+     * @return ResponseInterface
+     */
     public function index(): ResponseInterface
     {
         $paths = [];
@@ -30,6 +34,10 @@ class Controller extends PhalconController implements ControllerInterface
         ));
     }
 
+    /**
+     * @return-200 application/json {"type":"object"}
+     * @return ResponseInterface
+     */
     public function indexAction(): ResponseInterface
     {
         return $this->index();

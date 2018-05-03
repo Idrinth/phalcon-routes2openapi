@@ -32,6 +32,7 @@ class Reflector
      */
     public function __invoke(string $class, string $method):array
     {
+        try {
         if(!isset($this->cache[$class])) {
             $this->cache[$class]['____class'] = new ReflectionClass($class);
         }
@@ -39,6 +40,9 @@ class Reflector
             $this->cache[$class][$method] = $this->getReflect($this->cache[$class]['____class'], $method);
         }
         return $this->cache[$class][$method];
+        } catch(Exception $e) {
+            return [];
+        }
     }
     private function getReflect(ReflectionClass $class, string $method)
     {
@@ -52,7 +56,9 @@ class Reflector
                     [
                         "description" => '',
                         "content" => [
-                            $parts[0]?:'*/*' => json_decode($parts[1]??'{}')
+                            $parts[0]?:'*/*' => [
+                                "schema" => json_decode($parts[1]??'{}')
+                            ]
                         ]
                     ]
                 );
