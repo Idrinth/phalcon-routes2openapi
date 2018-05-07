@@ -15,12 +15,14 @@ interface Controller
     /**
      * generates api-documentation
      * @return ResponseInterface
+     * @return-200 application/json {"type":"object"}
      */
     public function index():ResponseInterface;
 
     /**
      * generates api-documentation
      * @return ResponseInterface
+     * @return-200 application/json {"type":"object"}
      */
     public function indexAction():ResponseInterface;
 }
