@@ -17,7 +17,9 @@ class Controller extends PhalconController implements ControllerInterface
           "version"=> "1.0.0"
         ]
       ];
+
     /**
+     * Generates an overview over routes registered
      * @return-200 application/json {"type":"object"}
      * @return ResponseInterface
      */
@@ -35,6 +37,7 @@ class Controller extends PhalconController implements ControllerInterface
     }
 
     /**
+     * Generates an overview over routes registered
      * @return-200 application/json {"type":"object"}
      * @return ResponseInterface
      */
