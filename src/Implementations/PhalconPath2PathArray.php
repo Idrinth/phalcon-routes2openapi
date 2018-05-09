@@ -2,18 +2,40 @@
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
-use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path as P2PI;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Mvc\Router\RouteInterface;
-use stdClass;
 
-class Path2Path implements P2PI
+class PhalconPath2PathArray implements Path2PathConverter
 {
-    public function convert(RouteInterface $route):array
+    /**
+     * @var PathTargetAnnotationResolver
+     */
+    private $pathTargetReflector;
+
+    /**
+     * @var RecursiveMerger
+     */
+    private $merger;
+
+    /**
+     * @param PathTargetAnnotationResolver $pathTargetReflector
+     * @param RecursiveMerger $merger
+     */
+    public function __construct(PathTargetAnnotationResolver $pathTargetReflector, RecursiveMerger $merger)
     {
-        $openapi = [
-            "description" => ""
-        ];
-        $path = str_replace(
+        $this->pathTargetReflector = $pathTargetReflector;
+        $this->merger = $merger;
+    }
+
+    /**
+     * @param RouteInterface $route
+     * @return string
+     */
+    private function getBasicPath(RouteInterface $route):string
+    {
+        return str_replace(
             [':controller',':action',':module',':namespace',':int'],
             [
                 '{controller:([a-zA-Z0-9\_\-]+)}',
@@ -28,6 +50,18 @@ class Path2Path implements P2PI
                 preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getPattern())
             )
         );
+    }
+
+    /**
+     * @param RouteInterface $route
+     * @return array
+     */
+    public function convert(RouteInterface $route):array
+    {
+        $openapi = [
+            "description" => ""
+        ];
+        $path = $this->getBasicPath($route);
         if (preg_match_all('/\{(.+?)\}/', $path, $matches)) {
             foreach ($matches[1] as $match) {
                 $parts = explode(':', $match, 2);
@@ -60,9 +94,9 @@ class Path2Path implements P2PI
                 $path = preg_replace('/'.preg_quote('('.$match.')', '/').'/', '{'.$name.'}', $path, 1);
             }
         }
-        $data = (new Reflector())($route->getPaths()['controller'],$route->getPaths()['action']);
+        $data = $this->pathTargetReflector($route->getPaths()['controller'],$route->getPaths()['action']);
         foreach ((array)$route->getHttpMethods() as $method) {
-            $openapi[strtolower($method)] = Merger::arrayMergeRecursiveNoConversion($openapi[strtolower($method)]??[], $data);
+            $openapi[strtolower($method)] = $this->merger->merge($openapi[strtolower($method)]??[], $data);
         }
         ksort($openapi);
         return [$path => $openapi];

@@ -3,7 +3,8 @@
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Controller as ControllerInterface;
-use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path as P2PI;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller as PhalconController;
 
@@ -27,12 +28,11 @@ class Controller extends PhalconController implements ControllerInterface
     {
         $paths = [];
         foreach($this->router->getRoutes() as $route) {
-            $paths[] = $this->di->get(P2PI::class)->convert($route);
+            $paths[] = $this->di->get(Path2PathConverter::class)->convert($route);
         }
-        $project = (new Composer())(dirname(__DIR__, 5).'/composer.json');
-        return $this->response->setJsonContent(Merger::arrayMergeRecursiveNoConversion(
+        return $this->response->setJsonContent($this->di->get(RecursiveMerger::class)->merge(
             self::$body,
-            ['paths' => array_merge(...$paths), 'info' => $project]
+            ['paths' => array_merge(...$paths), 'info' => (new Composer())(dirname(__DIR__, 5).'/composer.json')]
         ));
     }
 
@@ -46,6 +46,10 @@ class Controller extends PhalconController implements ControllerInterface
         return $this->index();
     }
 
+    /**
+     * @param string $root
+     * @return ControllerInterface
+     */
     public function setRoot(string $root): ControllerInterface
     {
         $this->root = $root;
