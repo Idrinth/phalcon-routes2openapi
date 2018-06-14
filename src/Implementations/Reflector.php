@@ -4,6 +4,7 @@ namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionClass;
+use Exception;
 
 class Reflector
 {
