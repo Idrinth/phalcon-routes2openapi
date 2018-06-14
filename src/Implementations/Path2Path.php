@@ -4,7 +4,6 @@ namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path as P2PI;
 use Phalcon\Mvc\Router\RouteInterface;
-use stdClass;
 
 class Path2Path implements P2PI
 {
