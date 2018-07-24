@@ -131,3 +131,4 @@ jobs:
       install: composer update
       script:
         - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
+

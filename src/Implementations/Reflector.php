@@ -2,34 +2,45 @@
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
-use phpDocumentor\Reflection\DocBlockFactory;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use ReflectionClass;
+use stdClass;
 use Exception;
 
-class Reflector
+class Reflector implements PathTargetAnnotationResolver
 {
     /**
      * @var array
      */
     private $cache = [];
+
     /**
-     *
-     * @var DocBlockFactory
+     * @var DocBlockFactoryInterface
      */
     private $parser;
-    public function __construct()
+
+    /**
+     * @var RecursiveMerger
+     */
+    private $merger;
+
+    /**
+     * @param DocBlockFactoryInterface $parser
+     * @param RecursiveMerger $merger
+     */
+    public function __construct(DocBlockFactoryInterface $parser, RecursiveMerger $merger)
     {
-        $this->parser = DocBlockFactory::createInstance();
+        $this->parser = $parser;
+        $this->merger = $merger;
     }
+
     /**
      * Tries to find references to return codes in the method's phpdoc
      * @param string $class
      * @param string $method
      * @return array
-     * @return-200 application/json
-     * @return-200 text/json
-     * @return-204
-     * @return-500
      */
     public function __invoke(string $class, string $method):array
     {
@@ -45,27 +56,26 @@ class Reflector
             return [];
         }
     }
-    private function getMimeAndSchemaFromTag($tag)
-    {
-        if(!preg_match('#^[a-z0-9.\-_]+/[a-z0-9.\-_]+($|\s)#', $tag)) {
-            return ['*/*', $tag];
-        }
-        return explode(" ", $tag, 2);
-    }
-    private function getReflect(ReflectionClass $class, string $method)
+
+    /**
+     * @param ReflectionClass $class
+     * @param string $method
+     * @return array
+     */
+    private function getReflect(ReflectionClass $class, string $method):array
     {
         $docBlock = $this->parser->create($class->getMethod($method));
         $data = [];
         foreach ($docBlock->getTags() as $tag) {
-            if(preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $code)) {
-                $parts = $this->getMimeAndSchemaFromTag("$tag");
-                $data[$code[1]] = Merger::arrayMergeRecursiveNoConversion(
-                    $data[$code[1]]??[],
+            if(preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches)) {
+                $parts = explode(" ", "$tag", 2);
+                $data[$matches[1]] = $this->merger->merge(
+                    $data[$matches[1]]??[],
                     [
                         "description" => '',
                         "content" => [
                             $parts[0]?:'*/*' => [
-                                "schema" => json_decode($parts[1]??'{}')
+                                "schema" => $parts[1]??new stdClass()
                             ]
                         ]
                     ]
@@ -74,7 +84,7 @@ class Reflector
         }
         return [
             "description" => $docBlock->getDescription().'',
-            "summary" => $docBlock->getSummary(),
+            "summary" => $docBlock->getSummary().'',
             "responses" => $data
         ];
     }

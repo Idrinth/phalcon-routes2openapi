@@ -2,10 +2,11 @@
 
 namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
-use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Path2Path;
+use De\Idrinth\PhalconRoutes2OpenApi\Implementations\NoValueConversionMerger;
+use De\Idrinth\PhalconRoutes2OpenApi\Implementations\PhalconPath2PathArray;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use Phalcon\Mvc\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class Path2PathTest extends TestCase
 {
@@ -242,6 +243,31 @@ class Path2PathTest extends TestCase
                     ]
                 ]
             ],
+            [
+                $this->makeRoute('/any/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}/here/', ['GET']),
+                [
+                    "/any/{date}/here/" => [
+                        "description" => "",
+                        "get" => [
+                            "responses" => [
+                                "200" => [
+                                    "description" => "",
+                                    "content" => [
+                                        "application/json" => new stdClass(),
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "parameters" => [
+                            [
+                                "name" => "date",
+                                "in" => "path",
+                                "pattern" => "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
         ];
     }
 
@@ -253,6 +279,12 @@ class Path2PathTest extends TestCase
      */
     public function testConvert(RouteInterface $route, array $result)
     {
-        $this->assertEquals($result, (new Path2Path())->convert($route));
+        $this->assertEquals(
+            $result,
+            (new PhalconPath2PathArray(
+                $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock(),
+                new NoValueConversionMerger())
+            )->convert($route)
+        );
     }
 }
