@@ -3,3 +3,7 @@ parameters:
         - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$router#'
         - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$di#'
         - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$response#'
+includes:
+    - ../tools/vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../tools/vendor/phpstan/phpstan-phpunit/rules.neon
+    - ../tools/vendor/phpstan/phpstan-strict-rules/rules.neon

@@ -115,7 +115,7 @@ jobs:
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.10 --working-dir=../tools
+        - composer require phpstan/phpstan:^0.10 phpstan/phpstan-phpunit phpstan/phpstan-strict-rules --working-dir=../tools
         - sh install-phalcon.sh
       install:
         - composer update

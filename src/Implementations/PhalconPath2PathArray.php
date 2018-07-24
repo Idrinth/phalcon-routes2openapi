@@ -35,7 +35,7 @@ class PhalconPath2PathArray implements Path2PathConverter
      */
     private function getBasicPath(RouteInterface $route):string
     {
-        return str_replace(
+        return (string) str_replace(
             [':controller',':action',':module',':namespace',':int'],
             [
                 '{controller:([a-zA-Z0-9\_\-]+)}',
