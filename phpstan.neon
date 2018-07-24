@@ -1,0 +1,5 @@
+parameters:
+    ignoreErrors:
+        - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$router#'
+        - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$di#'
+        - '#Access\sto\san\sundefined\sproperty\sDe\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$response#'

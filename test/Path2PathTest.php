@@ -13,20 +13,20 @@ class Path2PathTest extends TestCase
     /**
      * @param string $path
      * @param array $methods
-     * @param bool $hasUnnamed
+     * @param int $calls
      * @param array $config
      * @return RouteInterface
      */
     private function makeRoute(
         string $path,
         array $methods,
-        bool $hasUnnamed = false,
+        int $calls = 0,
         array $config = array()
     ):RouteInterface {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
         $route->expects($this->once())->method('getPattern')->with()->willReturn($path);
         $route->expects($this->once())->method('getHttpMethods')->with()->willReturn($methods);
-        $route->expects($this->exactly($hasUnnamed?1:0))->method('getReversedPaths')->with()->willReturn($config);
+        $route->expects($this->exactly($calls))->method('getReversedPaths')->with()->willReturn($config);
         return $route;
     }
 
@@ -142,7 +142,7 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/', ['GET'], true, [1 => 'var']),
+                $this->makeRoute('/([0-9a-z]+)/', ['GET'], 1, [1 => 'var']),
                 [
                     "/{var}/" => [
                         "description" => "",
@@ -165,7 +165,7 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/hi/([0-9a-z]+)/', ['GET'], true, [1 => 'var', 2 => 'abc']),
+                $this->makeRoute('/([0-9a-z]+)/hi/([0-9a-z]+)/', ['GET'], 1, [1 => 'var', 2 => 'abc']),
                 [
                     "/{var}/hi/{abc}/" => [
                         "description" => "",

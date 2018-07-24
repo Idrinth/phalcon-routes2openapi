@@ -41,20 +41,22 @@ class ServiceProvider implements ServiceProviderInterface
         $di->set(Controller::class, function () use ($root) {
             return (new ControllerImplementation())->setRoot($root);
         });
-        $di->set(Path2PathConverter::class, function () {
+        $di->set(Path2PathConverter::class, function () use (&$di) {
             return new PhalconPath2PathArray(
-                $this->get(PathTargetAnnotationResolver::class),
-                $this->get(Merger::class)
+                $di->get(PathTargetAnnotationResolver::class),
+                $di->get(RecursiveMerger::class)
             );
         });
         $di->set(DocBlockFactoryInterface::class, function () {
             return DocBlockFactory::createInstance();
         });
-        $di->set(PathTargetAnnotationResolver::class, function () {
-            return new Reflector($this->get(DocBlockFactoryInterface::class), $this->get(Merger::class));
+        $di->set(PathTargetAnnotationResolver::class, function () use (&$di) {
+            return new Reflector(
+                $di->get(DocBlockFactoryInterface::class),
+                $di->get(RecursiveMerger::class)
+            );
         });
         $di->set(RecursiveMerger::class, NoValueConversionMerger::class);
-        $di->set(Merger::class, NoValueConversionMerger::class);
         $di->get('router')->addGet($root, ['controller' => Controller::class, 'action' => 'index']);
     }
 }

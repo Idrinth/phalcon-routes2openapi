@@ -48,20 +48,17 @@ class PhalconPath2PathArray implements Path2PathConverter
                 '/:params:?\/?$/',
                 '',
                 preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getPattern())
-            )
+            ) ?? ''
         );
     }
 
     /**
-     * @param RouteInterface $route
-     * @return array
+     * @param string $path
+     * @param array $openapi
+     * @return void
      */
-    public function convert(RouteInterface $route):array
+    private function handleParams(string &$path, array &$openapi): void
     {
-        $openapi = [
-            "description" => ""
-        ];
-        $path = $this->getBasicPath($route);
         if (preg_match_all('/(\{([^{}]+?|\\\\\\{|\\\\\\}|(?R))+\\})/', $path, $matches)) {
             foreach ($matches[1] as $match) {
                 $parts = explode(':', substr($match, 1, -1), 2);
@@ -79,6 +76,16 @@ class PhalconPath2PathArray implements Path2PathConverter
                 $openapi['parameters'][] = $param;
             }
         }
+    }
+
+    /**
+     * @param string $path
+     * @param array $openapi
+     * @param RouteInterface $route
+     * @return void
+     */
+    private function handleQuery(string &$path, array &$openapi, RouteInterface $route): void
+    {
         if (preg_match_all('/\((.+?)\)/', $path, $matches)) {
             $names = $route->getReversedPaths();
             foreach ($matches[1] as $pos => $match) {
@@ -94,12 +101,26 @@ class PhalconPath2PathArray implements Path2PathConverter
                 $path = preg_replace('/'.preg_quote('('.$match.')', '/').'/', '{'.$name.'}', $path, 1);
             }
         }
+    }
+
+    /**
+     * @param RouteInterface $route
+     * @return array
+     */
+    public function convert(RouteInterface $route):array
+    {
+        $openapi = [
+            "description" => ""
+        ];
+        $path = $this->getBasicPath($route);
+        $this->handleParams($path, $openapi);
+        $this->handleQuery($path, $openapi, $route);
         $data = $this->pathTargetReflector->__invoke(
             (string) $route->getPaths()['controller'],
             (string) $route->getPaths()['action']
         );
         foreach ((array)$route->getHttpMethods() as $method) {
-            $openapi[strtolower($method)] = $this->merger->merge($openapi[strtolower($method)]??[], $data);
+            $openapi[strtolower($method)] = $this->merger->merge((array) ($openapi[strtolower($method)]??[]), $data);
         }
         ksort($openapi);
         return [$path => $openapi];
