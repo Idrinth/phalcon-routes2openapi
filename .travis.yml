@@ -8,7 +8,7 @@ git:
   depth: 3
 cache:
   directories:
-    - $HOME/.composer/cache/
+    - ~/.composer/cache/
     - ~/cphalcon
 jobs:
   include:
@@ -50,10 +50,9 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
-        - composer require --dev techpivot/phalcon-ci-installer --no-update
+        - sh install-phalcon.sh
       install:
         - composer update
-        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
         - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
@@ -62,10 +61,9 @@ jobs:
       name: PHP 7.1
       before_install:
         - phpenv config-rm xdebug.ini || true
-        - composer require --dev techpivot/phalcon-ci-installer --no-update
+        - sh install-phalcon.sh
       install:
         - composer update
-        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox test/
     - stage: Test
@@ -73,10 +71,9 @@ jobs:
       name: PHP 7.0
       before_install:
         - phpenv config-rm xdebug.ini || true
-        - composer require --dev techpivot/phalcon-ci-installer --no-update
+        - sh install-phalcon.sh
       install:
         - composer update
-        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox test/
 # Static Code Analysis
@@ -117,7 +114,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phpstan/phpstan:^0.10 --working-dir=../tools
-        - composer require --dev techpivot/phalcon-ci-installer --no-update
+        - sh install-phalcon.sh
       install:
         - composer update
         - vendor/bin/install-phalcon.sh
