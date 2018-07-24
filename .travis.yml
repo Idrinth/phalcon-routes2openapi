@@ -9,6 +9,7 @@ git:
 cache:
   directories:
     - $HOME/.composer/cache/
+    - ~/cphalcon
 jobs:
   include:
 # PHP Linting
@@ -46,29 +47,25 @@ jobs:
     - stage: Test
       php: 7.2
       name: PHP 7.2
-      addons:
-        apt:
-          packages:
-            - php7.2-phalcon
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
+        - composer require --dev techpivot/phalcon-ci-installer --no-update
       install:
         - composer update
+        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
         - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
     - stage: Test
       php: 7.1
       name: PHP 7.1
-      addons:
-        apt:
-          packages:
-            - php7.1-phalcon
       before_install:
         - phpenv config-rm xdebug.ini || true
+        - composer require --dev techpivot/phalcon-ci-installer --no-update
       install:
         - composer update
+        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox test/
     - stage: Test
@@ -80,8 +77,10 @@ jobs:
             - php7.0-phalcon
       before_install:
         - phpenv config-rm xdebug.ini || true
+        - composer require --dev techpivot/phalcon-ci-installer --no-update
       install:
         - composer update
+        - vendor/bin/install-phalcon.sh
       script:
         - vendor/bin/phpunit --testdox test/
 # Static Code Analysis
@@ -126,7 +125,10 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phpstan/phpstan:^0.10 --working-dir=../tools
-      install: composer update
+        - composer require --dev techpivot/phalcon-ci-installer --no-update
+      install:
+        - composer update
+        - vendor/bin/install-phalcon.sh
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src tests
     # Pre-Tag
