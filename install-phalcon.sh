@@ -1,3 +1,4 @@
+#!/bin/sh
 mkdir tmp && \
 mv composer.json tmp/ && \
 composer require --dev techpivot/phalcon-ci-installer && \
