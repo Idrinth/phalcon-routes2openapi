@@ -28,14 +28,9 @@ class Path2PathTest extends TestCase
                     "/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ]
                     ]
                 ]
@@ -46,14 +41,9 @@ class Path2PathTest extends TestCase
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -70,14 +60,9 @@ class Path2PathTest extends TestCase
                     "/request/{id}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -94,14 +79,9 @@ class Path2PathTest extends TestCase
                     "/admin/{controller}/a/{action}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -130,14 +110,9 @@ class Path2PathTest extends TestCase
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -158,14 +133,9 @@ class Path2PathTest extends TestCase
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -186,14 +156,9 @@ class Path2PathTest extends TestCase
                     "/{var}/hi/{abc}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -222,24 +187,14 @@ class Path2PathTest extends TestCase
                     "/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "trace" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ]
                     ]
                 ]
@@ -250,20 +205,18 @@ class Path2PathTest extends TestCase
                     "/any/{date}/here/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
                                 "name" => "date",
                                 "in" => "path",
-                                "pattern" => "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                                "schema" => [
+                                    "type" => "string",
+                                    "pattern" => "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                                ]
                             ]
                         ]
                     ]
@@ -280,10 +233,18 @@ class Path2PathTest extends TestCase
      */
     public function testConvert(RouteInterface $route, array $result)
     {
+        $annotations = $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock();
+        $annotations->expects($this->any())
+            ->method('__invoke')
+            ->willReturn([
+                "description" => '',
+                "summary" => '',
+                "responses" => []
+            ]);
         $this->assertEquals(
             $result,
             (new PhalconPath2PathArray(
-                $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock(),
+                $annotations,
                 new NoValueConversionMerger())
             )->convert($route)
         );

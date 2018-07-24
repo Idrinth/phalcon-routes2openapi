@@ -4,6 +4,7 @@ namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Controller;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\DiInterface;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Router\RouteInterface;
@@ -66,10 +67,40 @@ class ControllerTest extends TestCase
             ->method('convert')
             ->with(new IsInstanceOf(RouteInterface::class))
             ->willReturn(['/abc' => ['get' => []]]);
-        $di->expects($this->once())
+        $merger                = $this->getMockBuilder(RecursiveMerger::class)->getMock();
+        $merger->expects($this->once())
+            ->method('merge')
+            ->with([
+                    "openapi"=> "3.0.1",
+                    "info"=> [
+                        "title"=> "unknown",
+                        "version"=> "1.0.0"
+                    ]
+                ],
+                [
+                    "paths" => [
+                        '/abc' => ['get' => []]
+                    ],
+                    "info" => []
+                ]
+            )
+            ->willReturn([
+                "openapi"=> "3.0.1",
+                "info"=> [
+                    "title"=> "unknown",
+                    "version"=> "1.0.0"
+                ],
+                "paths" => [
+                    '/abc' => ['get' => []]
+                ]
+            ]);
+        $di->expects($this->exactly(2))
             ->method('get')
-            ->with(Path2PathConverter::class)
-            ->willReturn($p2p);
+            ->withConsecutive(
+                [Path2PathConverter::class],
+                [RecursiveMerger::class]
+            )
+            ->willReturnOnConsecutiveCalls($p2p, $merger);
         $instance->setDI($di);
         $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $response->expects($this->once())

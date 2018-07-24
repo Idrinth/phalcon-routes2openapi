@@ -62,9 +62,9 @@ class PhalconPath2PathArray implements Path2PathConverter
             "description" => ""
         ];
         $path = $this->getBasicPath($route);
-        if (preg_match_all('/\{(.+?)\}/', $path, $matches)) {
+        if (preg_match_all('/(\{([^{}]+?|\\\\\\{|\\\\\\}|(?R))+\\})/', $path, $matches)) {
             foreach ($matches[1] as $match) {
-                $parts = explode(':', $match, 2);
+                $parts = explode(':', substr($match, 1, -1), 2);
                 $param = [
                     'in' => 'path',
                     'name' => $parts[0]
@@ -74,7 +74,7 @@ class PhalconPath2PathArray implements Path2PathConverter
                         'type' => 'string',
                         'pattern' => $parts[1]
                     ];
-                    $path = str_replace('{'.$match.'}', '{'.$parts[0].'}', $path);
+                    $path = str_replace($match, '{'.$parts[0].'}', $path);
                 }
                 $openapi['parameters'][] = $param;
             }

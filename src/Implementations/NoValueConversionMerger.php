@@ -32,7 +32,11 @@ class NoValueConversionMerger implements RecursiveMerger
     {
       foreach ($array2 as $key => $value)
       {
-        $array1[$key] = $this->handleValueMerge($array1, $value, $key);
+           if (is_integer($key)) {
+                $array1[] = $value;
+            } else {
+                $array1[$key] = $this->handleValueMerge($array1, $value, $key);
+            }
       }
       return $array1;
     }
