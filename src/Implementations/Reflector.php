@@ -53,7 +53,11 @@ class Reflector implements PathTargetAnnotationResolver
             }
             return $this->cache[$class][$method];
         } catch(Exception $e) {
-            return [];
+            return [
+                "description" => '',
+                "summary" => '',
+                "responses" => []
+            ];
         }
     }
 

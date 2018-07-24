@@ -65,7 +65,7 @@ jobs:
       install:
         - composer update
       script:
-        - vendor/bin/phpunit -v --testdox test/
+        - vendor/bin/phpunit --testdox test/
     - stage: Test
       php: 7.0
       name: PHP 7.0

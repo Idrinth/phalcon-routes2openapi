@@ -7,6 +7,7 @@ use De\Idrinth\PhalconRoutes2OpenApi\Implementations\PhalconPath2PathArray;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use Phalcon\Mvc\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class Path2PathTest extends TestCase
 {

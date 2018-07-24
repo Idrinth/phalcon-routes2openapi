@@ -94,7 +94,10 @@ class PhalconPath2PathArray implements Path2PathConverter
                 $path = preg_replace('/'.preg_quote('('.$match.')', '/').'/', '{'.$name.'}', $path, 1);
             }
         }
-        $data = $this->pathTargetReflector($route->getPaths()['controller'],$route->getPaths()['action']);
+        $data = $this->pathTargetReflector->__invoke(
+            (string) $route->getPaths()['controller'],
+            (string) $route->getPaths()['action']
+        );
         foreach ((array)$route->getHttpMethods() as $method) {
             $openapi[strtolower($method)] = $this->merger->merge($openapi[strtolower($method)]??[], $data);
         }

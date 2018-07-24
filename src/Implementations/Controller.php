@@ -14,10 +14,10 @@ class Controller extends PhalconController implements ControllerInterface
     private static $body = [
         "openapi"=> "3.0.1",
         "info"=> [
-          "title"=> "unknown",
-          "version"=> "1.0.0"
+            "title"=> "unknown",
+            "version"=> "1.0.0"
         ]
-      ];
+    ];
 
     /**
      * Generates an overview over routes registered

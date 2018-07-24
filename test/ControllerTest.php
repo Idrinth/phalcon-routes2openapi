@@ -3,7 +3,7 @@
 namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Controller;
-use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2Path;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
 use Phalcon\DiInterface;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Router\RouteInterface;
@@ -17,7 +17,7 @@ class ControllerTest extends TestCase
     private function buildRouterMock(): RouterInterface
     {
         $router = $this->getMockBuilder(RouterInterface::class)->getMock();
-        $router->expects($this->exactly(1))
+        $router->expects($this->once())
             ->method('getRoutes')
             ->with()
             ->willReturn([$this->getMockBuilder(RouteInterface::class)->getMock()]);
@@ -61,15 +61,21 @@ class ControllerTest extends TestCase
         $instance->router   = $router;
         $instance->setRoot($root);
         $di                 = $this->getMockBuilder(DiInterface::class)->getMock();
-        $p2p                = $this->getMockBuilder(Path2Path::class)->getMock();
+        $p2p                = $this->getMockBuilder(Path2PathConverter::class)->getMock();
         $p2p->expects($this->once())
             ->method('convert')
             ->with(new IsInstanceOf(RouteInterface::class))
             ->willReturn(['/abc' => ['get' => []]]);
-        $di->expects($this->once())->method('get')->with(Path2Path::class)->willReturn($p2p);
+        $di->expects($this->once())
+            ->method('get')
+            ->with(Path2PathConverter::class)
+            ->willReturn($p2p);
         $instance->setDI($di);
-        $response           = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $response->expects($this->once())->method('setJsonContent')->with($result)->willReturnSelf();
+        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $response->expects($this->once())
+            ->method('setJsonContent')
+            ->with($result)
+            ->willReturnSelf();
         $instance->response = $response;
         return $instance;
     }
@@ -78,8 +84,7 @@ class ControllerTest extends TestCase
      * @test
      * @dataProvider provideIndex
      */
-    public function testIndex(RouterInterface $router, string $root,
-                              array $result)
+    public function testIndex(RouterInterface $router, string $root, array $result)
     {
         $this->assertInstanceOf(
             ResponseInterface::class,
@@ -91,8 +96,7 @@ class ControllerTest extends TestCase
      * @test
      * @dataProvider provideIndex
      */
-    public function testIndexAction(RouterInterface $router, string $root,
-                                    array $result)
+    public function testIndexAction(RouterInterface $router, string $root, array $result)
     {
         $this->assertInstanceOf(
             ResponseInterface::class,
