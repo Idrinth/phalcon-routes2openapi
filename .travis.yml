@@ -71,10 +71,6 @@ jobs:
     - stage: Test
       php: 7.0
       name: PHP 7.0
-      addons:
-        apt:
-          packages:
-            - php7.0-phalcon
       before_install:
         - phpenv config-rm xdebug.ini || true
         - composer require --dev techpivot/phalcon-ci-installer --no-update
@@ -117,10 +113,6 @@ jobs:
     - stage: Static Code Analysis
       php: 7.2
       name: PHPstan
-      addons:
-        apt:
-          packages:
-            - php7.2-phalcon
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
