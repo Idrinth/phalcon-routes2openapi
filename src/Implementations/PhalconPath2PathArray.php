@@ -69,7 +69,7 @@ class PhalconPath2PathArray implements Path2PathConverter
                     'in' => 'path',
                     'name' => $parts[0]
                 ];
-                if(count($parts) === 2) {
+                if (count($parts) === 2) {
                     $param['schema'] = [
                         'type' => 'string',
                         'pattern' => $parts[1]

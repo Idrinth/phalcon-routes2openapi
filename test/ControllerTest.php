@@ -70,7 +70,8 @@ class ControllerTest extends TestCase
         $merger                = $this->getMockBuilder(RecursiveMerger::class)->getMock();
         $merger->expects($this->once())
             ->method('merge')
-            ->with([
+            ->with(
+                [
                     "openapi"=> "3.0.1",
                     "info"=> [
                         "title"=> "unknown",

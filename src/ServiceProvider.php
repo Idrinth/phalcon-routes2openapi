@@ -38,19 +38,19 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $root = $this->apiRoot;
-        $di->set(Controller::class, function() use ($root) {
+        $di->set(Controller::class, function () use ($root) {
             return (new ControllerImplementation())->setRoot($root);
         });
-        $di->set(Path2PathConverter::class, function() {
+        $di->set(Path2PathConverter::class, function () {
             return new PhalconPath2PathArray(
                 $this->get(PathTargetAnnotationResolver::class),
                 $this->get(Merger::class)
             );
         });
-        $di->set(DocBlockFactoryInterface::class, function() {
+        $di->set(DocBlockFactoryInterface::class, function () {
             return DocBlockFactory::createInstance();
         });
-        $di->set(PathTargetAnnotationResolver::class, function() {
+        $di->set(PathTargetAnnotationResolver::class, function () {
             return new Reflector($this->get(DocBlockFactoryInterface::class), $this->get(Merger::class));
         });
         $di->set(RecursiveMerger::class, NoValueConversionMerger::class);

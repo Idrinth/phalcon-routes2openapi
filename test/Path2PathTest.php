@@ -7,19 +7,33 @@ use De\Idrinth\PhalconRoutes2OpenApi\Implementations\PhalconPath2PathArray;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use Phalcon\Mvc\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class Path2PathTest extends TestCase
 {
-    private function makeRoute(string $path, array $methods, bool $hasUnnamed = false, array $config = array()):RouteInterface
-    {
+    /**
+     * @param string $path
+     * @param array $methods
+     * @param bool $hasUnnamed
+     * @param array $config
+     * @return RouteInterface
+     */
+    private function makeRoute(
+        string $path,
+        array $methods,
+        bool $hasUnnamed = false,
+        array $config = array()
+    ):RouteInterface {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
         $route->expects($this->once())->method('getPattern')->with()->willReturn($path);
         $route->expects($this->once())->method('getHttpMethods')->with()->willReturn($methods);
         $route->expects($this->exactly($hasUnnamed?1:0))->method('getReversedPaths')->with()->willReturn($config);
         return $route;
     }
-    public function provideConvert()
+
+    /**
+     * @return array
+     */
+    public function provideConvert(): array
     {
         return [
             [
@@ -245,7 +259,8 @@ class Path2PathTest extends TestCase
             $result,
             (new PhalconPath2PathArray(
                 $annotations,
-                new NoValueConversionMerger())
+                new NoValueConversionMerger()
+            )
             )->convert($route)
         );
     }

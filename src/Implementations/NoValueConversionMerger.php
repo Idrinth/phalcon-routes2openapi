@@ -30,10 +30,9 @@ class NoValueConversionMerger implements RecursiveMerger
      */
     public function merge(array $array1, array $array2):array
     {
-      foreach ($array2 as $key => $value)
-      {
+        foreach ($array2 as $key => $value) {
             is_integer($key) ? $array1[] = $value : $array1[$key] = $this->handleValueMerge($array1, $value, $key);
-      }
-      return $array1;
+        }
+        return $array1;
     }
 }

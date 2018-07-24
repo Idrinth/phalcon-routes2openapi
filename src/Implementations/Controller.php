@@ -27,7 +27,7 @@ class Controller extends PhalconController implements ControllerInterface
     public function index(): ResponseInterface
     {
         $paths = [];
-        foreach($this->router->getRoutes() as $route) {
+        foreach ($this->router->getRoutes() as $route) {
             $paths[] = $this->di->get(Path2PathConverter::class)->convert($route);
         }
         return $this->response->setJsonContent($this->di->get(RecursiveMerger::class)->merge(
