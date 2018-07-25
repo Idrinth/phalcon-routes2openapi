@@ -24,9 +24,9 @@ class Path2PathTest extends TestCase
         array $config = array()
     ):RouteInterface {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
-        $route->expects($this->once())->method('getPattern')->with()->willReturn($path);
-        $route->expects($this->once())->method('getHttpMethods')->with()->willReturn($methods);
-        $route->expects($this->exactly($calls))->method('getReversedPaths')->with()->willReturn($config);
+        $route->expects(static::once())->method('getPattern')->with()->willReturn($path);
+        $route->expects(static::once())->method('getHttpMethods')->with()->willReturn($methods);
+        $route->expects(static::exactly($calls))->method('getReversedPaths')->with()->willReturn($config);
         return $route;
     }
 
@@ -244,18 +244,19 @@ class Path2PathTest extends TestCase
      * @dataProvider provideConvert
      * @param RouteInterface $route
      * @param array $result
+     * @return void
      */
     public function testConvert(RouteInterface $route, array $result)
     {
         $annotations = $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock();
-        $annotations->expects($this->any())
+        $annotations->expects(static::any())
             ->method('__invoke')
             ->willReturn([
                 "description" => '',
                 "summary" => '',
                 "responses" => []
             ]);
-        $this->assertEquals(
+        static::assertEquals(
             $result,
             (new PhalconPath2PathArray(
                 $annotations,

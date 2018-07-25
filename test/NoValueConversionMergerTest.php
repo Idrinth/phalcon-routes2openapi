@@ -31,7 +31,7 @@ class NoValueConversionMergerTest extends TestCase
      */
     public function testMerge(array $in1, array $in2, array $out)
     {
-        $this->assertEquals(
+        static::assertEquals(
             $out,
             (new NoValueConversionMerger)->merge($in1, $in2)
         );

@@ -16,7 +16,7 @@ class Controller extends PhalconController implements ControllerInterface
     private $root;
 
     /**
-     * @var array 
+     * @var array
      */
     private static $body = [
         "openapi"=> "3.0.1",
