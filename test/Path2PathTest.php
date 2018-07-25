@@ -2,22 +2,38 @@
 
 namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
-use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Path2Path;
+use De\Idrinth\PhalconRoutes2OpenApi\Implementations\NoValueConversionMerger;
+use De\Idrinth\PhalconRoutes2OpenApi\Implementations\PhalconPath2PathArray;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use Phalcon\Mvc\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class Path2PathTest extends TestCase
 {
-    private function makeRoute(string $path, array $methods, bool $hasUnnamed = false, array $config = array()):RouteInterface
-    {
+    /**
+     * @param string $path
+     * @param array $methods
+     * @param int $calls
+     * @param array $config
+     * @return RouteInterface
+     */
+    private function makeRoute(
+        string $path,
+        array $methods,
+        int $calls = 0,
+        array $config = array()
+    ):RouteInterface {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
-        $route->expects($this->once())->method('getPattern')->with()->willReturn($path);
-        $route->expects($this->once())->method('getHttpMethods')->with()->willReturn($methods);
-        $route->expects($this->exactly($hasUnnamed?1:0))->method('getReversedPaths')->with()->willReturn($config);
+        $route->expects(static::once())->method('getPattern')->with()->willReturn($path);
+        $route->expects(static::once())->method('getHttpMethods')->with()->willReturn($methods);
+        $route->expects(static::exactly($calls))->method('getReversedPaths')->with()->willReturn($config);
         return $route;
     }
-    public function provideConvert()
+
+    /**
+     * @return array
+     */
+    public function provideConvert(): array
     {
         return [
             [
@@ -26,14 +42,9 @@ class Path2PathTest extends TestCase
                     "/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ]
                     ]
                 ]
@@ -44,14 +55,9 @@ class Path2PathTest extends TestCase
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -68,14 +74,9 @@ class Path2PathTest extends TestCase
                     "/request/{id}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -92,14 +93,9 @@ class Path2PathTest extends TestCase
                     "/admin/{controller}/a/{action}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -128,14 +124,9 @@ class Path2PathTest extends TestCase
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -151,19 +142,14 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/', ['GET'], true, [1 => 'var']),
+                $this->makeRoute('/([0-9a-z]+)/', ['GET'], 1, [1 => 'var']),
                 [
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -179,19 +165,14 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/hi/([0-9a-z]+)/', ['GET'], true, [1 => 'var', 2 => 'abc']),
+                $this->makeRoute('/([0-9a-z]+)/hi/([0-9a-z]+)/', ['GET'], 1, [1 => 'var', 2 => 'abc']),
                 [
                     "/{var}/hi/{abc}/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "parameters" => [
                             [
@@ -220,22 +201,35 @@ class Path2PathTest extends TestCase
                     "/" => [
                         "description" => "",
                         "get" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
-                                ]
-                            ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
                         ],
                         "trace" => [
-                            "responses" => [
-                                "200" => [
-                                    "description" => "",
-                                    "content" => [
-                                        "application/json" => new stdClass(),
-                                    ]
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
+                        ]
+                    ]
+                ]
+            ],
+            [
+                $this->makeRoute('/any/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}/here/', ['GET']),
+                [
+                    "/any/{date}/here/" => [
+                        "description" => "",
+                        "get" => [
+                            "description" => '',
+                            "summary" => '',
+                            "responses" => []
+                        ],
+                        "parameters" => [
+                            [
+                                "name" => "date",
+                                "in" => "path",
+                                "schema" => [
+                                    "type" => "string",
+                                    "pattern" => "[0-9]{4}-[0-9]{2}-[0-9]{2}"
                                 ]
                             ]
                         ]
@@ -250,9 +244,25 @@ class Path2PathTest extends TestCase
      * @dataProvider provideConvert
      * @param RouteInterface $route
      * @param array $result
+     * @return void
      */
     public function testConvert(RouteInterface $route, array $result)
     {
-        $this->assertEquals($result, (new Path2Path())->convert($route));
+        $annotations = $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock();
+        $annotations->expects(static::any())
+            ->method('__invoke')
+            ->willReturn([
+                "description" => '',
+                "summary" => '',
+                "responses" => []
+            ]);
+        static::assertEquals(
+            $result,
+            (new PhalconPath2PathArray(
+                $annotations,
+                new NoValueConversionMerger()
+            )
+            )->convert($route)
+        );
     }
 }

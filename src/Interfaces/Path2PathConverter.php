@@ -4,7 +4,7 @@ namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
 use Phalcon\Mvc\Router\RouteInterface;
 
-interface Path2Path
+interface Path2PathConverter
 {
     public function convert(RouteInterface $route):array;
 }

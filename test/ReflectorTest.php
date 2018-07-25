@@ -2,41 +2,35 @@
 
 namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
+use De\Idrinth\PhalconRoutes2OpenApi\Implementations\NoValueConversionMerger;
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Reflector;
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class ReflectorTest extends TestCase
 {
+    /**
+     * @test
+     * @return void
+     */
     public function testInvoke()
     {
-        $this->assertEquals(
+        $doc = $this->getMockBuilder(DocBlockFactoryInterface::class)->getMock();
+        $doc->expects(static::once())
+            ->method('create')
+            ->with()
+            ->willReturn(new DocBlock());
+        static::assertEquals(
             [
                 "description" => "",
-                "summary" => "Tries to find references to return codes in the method's phpdoc",
-                "responses" => [
-                    "200" => [
-                        "description" => "",
-                        "content" => [
-                            'application/json' => new stdClass(),
-                            'text/json' => new stdClass(),
-                        ]
-                    ],
-                    "204" => [
-                        "description" => "",
-                        "content" => [
-                            '*/*' => new stdClass(),
-                        ]
-                    ],
-                    "500" => [
-                        "description" => "",
-                        "content" => [
-                            '*/*' => new stdClass(),
-                        ]
-                    ]
-                ]
+                "summary" => "",
+                "responses" => []
             ],
-            (new Reflector())(Reflector::class, '__invoke')
+            (new Reflector(
+                $doc,
+                new NoValueConversionMerger()
+            ))(Reflector::class, '__invoke')
         );
     }
 }
