@@ -124,10 +124,8 @@ class ControllerTest extends TestCase
      */
     public function testIndex(RouterInterface $router, string $root, array $result)
     {
-        static::assertInstanceOf(
-            ResponseInterface::class,
-            $this->getPreparedInstance($router, $root, $result)->index()
-        );
+        $instance = $this->getPreparedInstance($router, $root, $result);
+        static::assertSame($instance->response, $instance->index());
     }
 
     /**
@@ -140,9 +138,7 @@ class ControllerTest extends TestCase
      */
     public function testIndexAction(RouterInterface $router, string $root, array $result)
     {
-        static::assertInstanceOf(
-            ResponseInterface::class,
-            $this->getPreparedInstance($router, $root, $result)->indexAction()
-        );
+        $instance = $this->getPreparedInstance($router, $root, $result);
+        static::assertSame($instance->response, $instance->indexAction());
     }
 }
