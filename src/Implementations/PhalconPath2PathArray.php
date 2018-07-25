@@ -57,7 +57,7 @@ class PhalconPath2PathArray implements Path2PathConverter
      * @param array $openapi
      * @return void
      */
-    private function handleParams(string &$path, array &$openapi): void
+    private function handleParams(string &$path, array &$openapi)
     {
         if (preg_match_all('/(\{([^{}]+?|\\\\\\{|\\\\\\}|(?R))+\\})/', $path, $matches)) {
             foreach ($matches[1] as $match) {
@@ -84,7 +84,7 @@ class PhalconPath2PathArray implements Path2PathConverter
      * @param RouteInterface $route
      * @return void
      */
-    private function handleQuery(string &$path, array &$openapi, RouteInterface $route): void
+    private function handleQuery(string &$path, array &$openapi, RouteInterface $route)
     {
         if (preg_match_all('/\((.+?)\)/', $path, $matches)) {
             $names = $route->getReversedPaths();
