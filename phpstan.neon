@@ -3,7 +3,6 @@ parameters:
         - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$router#'
         - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$di#'
         - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$response#'
-        - '#Call\s+to\s+static\s+method\s+PHPUnit\\Framework\\Assert::assertInstanceOf\(\)\s+with\s+.+?\s+and\s+.+?\s+will\s+always\s+evaluate\s+to\s+true.#'
 includes:
     - ../tools/vendor/phpstan/phpstan-phpunit/extension.neon
     - ../tools/vendor/phpstan/phpstan-phpunit/rules.neon
