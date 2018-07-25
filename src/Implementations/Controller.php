@@ -10,7 +10,14 @@ use Phalcon\Mvc\Controller as PhalconController;
 
 class Controller extends PhalconController implements ControllerInterface
 {
+    /**
+     * @var string
+     */
     private $root;
+
+    /**
+     * @var array 
+     */
     private static $body = [
         "openapi"=> "3.0.1",
         "info"=> [

@@ -7,7 +7,10 @@ use PHPUnit\Framework\TestCase;
 
 class NoValueConversionMergerTest extends TestCase
 {
-    public function provideMerge()
+    /**
+     * @return array
+     */
+    public function provideMerge(): array
     {
         return [
             [[], [], []],
@@ -18,11 +21,13 @@ class NoValueConversionMergerTest extends TestCase
             [['abv', 'b' => ['a' => []]], ['b' => ['a' => ['zz' => 1]]], ['b' => ['a' => ['zz' => 1]], 'abv']],
         ];
     }
+
     /**
      * @dataProvider provideMerge
      * @param array $in1
      * @param array $in2
      * @param array $out
+     * @return void
      */
     public function testMerge(array $in1, array $in2, array $out)
     {

@@ -71,7 +71,7 @@ class Reflector implements PathTargetAnnotationResolver
         $docBlock = $this->parser->create($class->getMethod($method));
         $data = [];
         foreach ($docBlock->getTags() as $tag) {
-            if (preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches)) {
+            if ((int) preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches) > 0) {
                 $parts = explode(" ", "$tag", 2);
                 $data[$matches[1]] = $this->merger->merge(
                     $data[$matches[1]]??[],

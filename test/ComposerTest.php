@@ -7,9 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class ComposerTest extends TestCase
 {
+    /**
+     * @test
+     * @return void
+     */
     public function testInvoke()
     {
-        $this->assertEquals(
+        static::assertEquals(
             [
                 "title" => "idrinth/phalcon-routes2openapi",
                 "description" => "Generates an JSON represantation of the routes "

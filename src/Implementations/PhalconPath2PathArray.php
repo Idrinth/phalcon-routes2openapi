@@ -33,9 +33,9 @@ class PhalconPath2PathArray implements Path2PathConverter
      * @param RouteInterface $route
      * @return string
      */
-    private function getBasicPath(RouteInterface $route):string
+    private function getBasicPath(RouteInterface $route): string
     {
-        return (string) str_replace(
+        $result = str_replace(
             [':controller',':action',':module',':namespace',':int'],
             [
                 '{controller:([a-zA-Z0-9\_\-]+)}',
@@ -50,6 +50,7 @@ class PhalconPath2PathArray implements Path2PathConverter
                 preg_replace('/^#\^(.*)\$#.*?$/', '$1', $route->getPattern())
             ) ?? ''
         );
+        return is_string($result) ? $result : '';
     }
 
     /**
@@ -59,7 +60,7 @@ class PhalconPath2PathArray implements Path2PathConverter
      */
     private function handleParams(string &$path, array &$openapi)
     {
-        if (preg_match_all('/(\{([^{}]+?|\\\\\\{|\\\\\\}|(?R))+\\})/', $path, $matches)) {
+        if ((int) preg_match_all('/(\{([^{}]+?|\\\\\\{|\\\\\\}|(?R))+\\})/', $path, $matches) > 0) {
             foreach ($matches[1] as $match) {
                 $parts = explode(':', substr($match, 1, -1), 2);
                 $param = [
@@ -86,7 +87,7 @@ class PhalconPath2PathArray implements Path2PathConverter
      */
     private function handleQuery(string &$path, array &$openapi, RouteInterface $route)
     {
-        if (preg_match_all('/\((.+?)\)/', $path, $matches)) {
+        if ((int) preg_match_all('/\((.+?)\)/', $path, $matches) > 0) {
             $names = $route->getReversedPaths();
             foreach ($matches[1] as $pos => $match) {
                 $name = $names[$pos+1];
