@@ -132,5 +132,5 @@ jobs:
         - sh install-phalcon.sh
       install: composer update
       script:
-        - ../tools/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
+        - ../tools/php-semver-checker-git/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
 
