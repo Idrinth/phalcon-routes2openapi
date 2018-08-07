@@ -1,8 +1,6 @@
 parameters:
     ignoreErrors:
-        - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$router#'
-        - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$di#'
-        - '#Access\s+to\s+an\s+undefined\s+property\s+De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$response#'
+        - '#Access to an undefined property De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$(router|request|di|response)#'
 includes:
     - ../tools/vendor/phpstan/phpstan-phpunit/extension.neon
     - ../tools/vendor/phpstan/phpstan-phpunit/rules.neon

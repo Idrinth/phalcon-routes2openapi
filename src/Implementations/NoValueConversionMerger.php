@@ -3,6 +3,7 @@
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
+use InvalidArgumentException;
 
 class NoValueConversionMerger implements RecursiveMerger
 {
@@ -37,16 +38,31 @@ class NoValueConversionMerger implements RecursiveMerger
     }
 
     /**
-     * @param array $sets each array to be merged into the first as a parameter
+     * @param array[] ...$sets each array to be merged into the first as a parameter
      * @return array
+     * @throws InvalidArgumentException
      */
     public function mergeAll(...$sets): array
     {
         $initial = array_shift($sets);
-        foreach ($sets as $set)
+        $this->checkArray($initial, 1);
+        foreach ($sets as $pos => $set)
         {
+            $this->checkArray($set, $pos+2);
             $initial = $this->merge($initial, $set);
         }
         return $initial;
+    }
+
+    /**
+     * @param mixed $set
+     * @param int $num
+     * @throws InvalidArgumentException
+     */
+    private function checkArray($set, int $num)
+    {
+        if(!is_array($set)) {
+            throw new InvalidArgumentException("Set #$num is not an array, but a(n) " . gettype($set) . '.');
+        }
     }
 }
