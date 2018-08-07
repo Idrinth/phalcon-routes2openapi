@@ -32,31 +32,35 @@ class ServiceProvider implements ServiceProviderInterface
 
     /**
      * Registers controller at api-root
-     * @param DiInterface $di
+     * @param DiInterface $serviceContainer
      * @return void
      */
-    public function register(DiInterface $di)
+    public function register(DiInterface $serviceContainer)
     {
         $root = $this->apiRoot;
-        $di->set(Controller::class, function () use ($root) {
+        $serviceContainer->set(Controller::class, function () use ($root) {
             return (new ControllerImplementation())->setRoot($root);
         });
-        $di->set(Path2PathConverter::class, function () use (&$di) {
+        $serviceContainer->set(Path2PathConverter::class, function () use (&$serviceContainer) {
             return new PhalconPath2PathArray(
-                $di->get(PathTargetAnnotationResolver::class),
-                $di->get(RecursiveMerger::class)
+                $serviceContainer->get(PathTargetAnnotationResolver::class),
+                $serviceContainer->get(RecursiveMerger::class)
             );
         });
-        $di->set(DocBlockFactoryInterface::class, function () {
+        $serviceContainer->set(DocBlockFactoryInterface::class, function () {
             return DocBlockFactory::createInstance();
         });
-        $di->set(PathTargetAnnotationResolver::class, function () use (&$di) {
+        $serviceContainer->set(PathTargetAnnotationResolver::class, function () use (&$serviceContainer) {
             return new Reflector(
-                $di->get(DocBlockFactoryInterface::class),
-                $di->get(RecursiveMerger::class)
+                $serviceContainer->get(DocBlockFactoryInterface::class),
+                $serviceContainer->get(RecursiveMerger::class)
             );
         });
-        $di->set(RecursiveMerger::class, NoValueConversionMerger::class);
-        $di->get('router')->addGet($root, ['controller' => Controller::class, 'action' => 'index']);
+        $serviceContainer->set(RecursiveMerger::class, NoValueConversionMerger::class);
+    }
+    private function registerRoutes(\Phalcon\Mvc\RouterInterface $router)
+    {
+        $router->addGet($this->apiRoot, ['controller' => Controller::class, 'action' => 'index']);
+        $router->addOptions($this->apiRoot, ['controller' => Controller::class, 'action' => 'options']);
     }
 }

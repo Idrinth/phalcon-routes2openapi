@@ -23,11 +23,15 @@
     },
     "require-dev": {
         "phalcon/ide-stubs": "^3.2",
-        "phpunit/phpunit": "^6.5.7|^7"
+        "phpunit/phpunit": "^6.5.7|^7",
+        "dg/bypass-finals": "^1.1"
     },
     "autoload-dev": {
         "psr-4": {
             "De\\Idrinth\\Test\\PhalconRoutes2OpenApi\\": "test"
-        }
+        },
+        "files": [
+            "test/disable_final.php"
+        ]
     }
 }
