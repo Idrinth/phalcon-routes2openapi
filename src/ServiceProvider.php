@@ -12,6 +12,7 @@ use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
+use Phalcon\Mvc\RouterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
@@ -27,7 +28,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function __construct(string $apiRoot = '/')
     {
-        $this->apiRoot = ($apiRoot{0}==='/'?'':'/').$apiRoot;
+        $this->apiRoot = ($apiRoot{0}==='/' ? '' : '/') . $apiRoot;
     }
 
     /**
@@ -37,7 +38,17 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $serviceContainer)
     {
-        $root = $this->apiRoot;
+        $this->registerServices($serviceContainer, $this->apiRoot);
+        $this->registerRoutes($serviceContainer->get('router'));
+    }
+
+    /**
+     * @param DiInterface $serviceContainer
+     * @param string $root
+     * @return void
+     */
+    private function registerServices(DiInterface $serviceContainer, string $root)
+    {
         $serviceContainer->set(Controller::class, function () use ($root) {
             return (new ControllerImplementation())->setRoot($root);
         });
@@ -58,7 +69,12 @@ class ServiceProvider implements ServiceProviderInterface
         });
         $serviceContainer->set(RecursiveMerger::class, NoValueConversionMerger::class);
     }
-    private function registerRoutes(\Phalcon\Mvc\RouterInterface $router)
+
+    /**
+     * @param RouterInterface $router
+     * @return void
+     */
+    private function registerRoutes(RouterInterface $router)
     {
         $router->addGet($this->apiRoot, ['controller' => Controller::class, 'action' => 'index']);
         $router->addOptions($this->apiRoot, ['controller' => Controller::class, 'action' => 'options']);
