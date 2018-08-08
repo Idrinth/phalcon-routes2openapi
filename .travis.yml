@@ -54,8 +54,8 @@ jobs:
       install:
         - composer update
       script:
-        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
-        - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
     - stage: Test
       php: 7.1
       name: PHP 7.1
