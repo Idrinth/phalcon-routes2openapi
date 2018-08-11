@@ -214,7 +214,7 @@ class ControllerTest extends TestCase
             ->expects(static::exactly(2))
             ->method('setHeader')
             ->withConsecutive(
-                ['Access-Control-Allow-Origin', $origin ?: '*'],
+                ['Access-Control-Allow-Origin', $origin === '' ? '*' : $origin],
                 ['Access-Control-Allow-Methods', 'GET, OPTIONS']
             )
             ->willReturnSelf();
