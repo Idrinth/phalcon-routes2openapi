@@ -132,7 +132,7 @@ jobs:
       install:
         - composer update
       script:
-        - php ../tools/vendor/phpmetrics . --exclude=vendor
+        - php ../tools/vendor/bin/phpmetrics . --exclude=vendor
     # Pre-Tag
     - stage: Pre-Tag
       php: 7.2
