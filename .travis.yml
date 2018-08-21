@@ -121,7 +121,8 @@ jobs:
         - composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src test
-    - stage: Static Code Analysis
+# Pre-Tag
+    - stage: Pre-Tag
       php: 7.2
       name: PHPmetrics
       before_install:
@@ -133,7 +134,6 @@ jobs:
         - composer update
       script:
         - php ../tools/vendor/bin/phpmetrics . --exclude=vendor
-    # Pre-Tag
     - stage: Pre-Tag
       php: 7.2
       name: PHP Semver Checker
@@ -145,4 +145,3 @@ jobs:
       install: composer update
       script:
         - ../tools/php-semver-checker-git/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
-
