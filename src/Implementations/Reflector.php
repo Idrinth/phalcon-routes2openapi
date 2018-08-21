@@ -73,7 +73,7 @@ class Reflector implements PathTargetAnnotationResolver
         foreach ($docBlock->getTags() as $tag) {
             if ((int) preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches) > 0) {
                 $parts = explode(" ", "$tag", 2);
-                if (!$parts[0] || $parts[0]{0} === '{') {
+                if (!isset($parts[0]) || $parts[0] === '' || $parts[0]{0} === '{') {
                     array_unshift($parts, '*/*');
                     if (isset($parts[2])) {
                         $parts[1] .= " " . array_pop($parts);
@@ -85,7 +85,7 @@ class Reflector implements PathTargetAnnotationResolver
                         "description" => '',
                         "content" => [
                             $parts[0] => [
-                                "schema" => json_decode($parts[1] ?? '{}') ?: new \stdClass()
+                                "schema" => json_decode($parts[1] ?? '{}') ?: new stdClass()
                             ]
                         ]
                     ]

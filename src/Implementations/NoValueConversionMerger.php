@@ -44,12 +44,9 @@ class NoValueConversionMerger implements RecursiveMerger
      */
     public function mergeAll(...$sets): array
     {
-        $initial = array_shift($sets);
-        $this->checkArray($initial, 1);
-        foreach ($sets as $pos => $set)
-        {
-            $this->checkArray($set, $pos+2);
-            $initial = $this->merge($initial, $set);
+        $initial = $this->checkArray(array_shift($sets), 1);
+        foreach ($sets as $pos => $set) {
+            $initial = $this->merge($initial, $this->checkArray($set, $pos+2));
         }
         return $initial;
     }
@@ -58,11 +55,13 @@ class NoValueConversionMerger implements RecursiveMerger
      * @param mixed $set
      * @param int $num
      * @throws InvalidArgumentException
+     * @return array
      */
-    private function checkArray($set, int $num)
+    private function checkArray($set, int $num): array
     {
-        if(!is_array($set)) {
+        if (!is_array($set)) {
             throw new InvalidArgumentException("Set #$num is not an array, but a(n) " . gettype($set) . '.');
         }
+        return $set;
     }
 }

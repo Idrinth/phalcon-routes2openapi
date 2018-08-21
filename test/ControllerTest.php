@@ -197,6 +197,7 @@ class ControllerTest extends TestCase
     /**
      * @param Controller $instance
      * @param string $origin
+     * @return void
      */
     private function prepareInstanceForOptions(Controller $instance, string $origin)
     {

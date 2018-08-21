@@ -1,6 +1,7 @@
 parameters:
     ignoreErrors:
-        - '#Access to an undefined property De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$(router|request|di|response)#'
+        - '#^Access to an undefined property De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\Controller::\$(router|request|di|response)\.$#'
+        - '#^Parameter \#4 ...\$sets of method De\\Idrinth\\PhalconRoutes2OpenApi\\Implementations\\NoValueConversionMerger::mergeAll\(\) expects array, string given\.$#'
 includes:
     - ../tools/vendor/phpstan/phpstan-phpunit/extension.neon
     - ../tools/vendor/phpstan/phpstan-phpunit/rules.neon
