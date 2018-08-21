@@ -37,10 +37,18 @@ class Controller extends PhalconController implements ControllerInterface
         foreach ($this->router->getRoutes() as $route) {
             $paths[] = $this->di->get(Path2PathConverter::class)->convert($route);
         }
-        return $this->response->setJsonContent($this->di->get(RecursiveMerger::class)->merge(
-            self::$body,
-            ['paths' => array_merge(...$paths), 'info' => (new Composer())(dirname(__DIR__, 5).'/composer.json')]
-        ));
+        $merger = $this->di->get(RecursiveMerger::class);
+        return $this
+            ->getCorsEnabledResponse()
+            ->setJsonContent(
+                $merger->merge(
+                    self::$body,
+                    [
+                        'paths' => $merger->mergeAll(...$paths),
+                        'info' => (new Composer())(dirname(__DIR__, 5).'/composer.json')
+                    ]
+                )
+            );
     }
 
     /**
@@ -51,6 +59,41 @@ class Controller extends PhalconController implements ControllerInterface
     public function indexAction(): ResponseInterface
     {
         return $this->index();
+    }
+
+    /**
+     * Generates an overview over routes registered
+     * @return-204 {"type":"string","maxLength":0}
+     * @return ResponseInterface
+     */
+    public function options(): ResponseInterface
+    {
+        return $this
+            ->getCorsEnabledResponse()
+            ->setStatusCode(204);
+    }
+
+    /**
+     * Generates an overview over routes registered
+     * @return-204 {"type":"string","maxLength":0}
+     * @return ResponseInterface
+     */
+    public function optionsAction(): ResponseInterface
+    {
+        return $this->options();
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function getCorsEnabledResponse(): ResponseInterface
+    {
+        return $this->response
+            ->setHeader(
+                'Access-Control-Allow-Origin',
+                $this->request->getHeader('Origin') ?: '*'
+            )
+            ->setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     }
 
     /**

@@ -54,8 +54,8 @@ jobs:
       install:
         - composer update
       script:
-        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover build/logs/clover.xml --whitelist src/ test/
-        - ../tools/vendor/bin/codacycoverage clover build/logs/clover.xml
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
     - stage: Test
       php: 7.1
       name: PHP 7.1
@@ -121,7 +121,19 @@ jobs:
         - composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src test
-    # Pre-Tag
+# Pre-Tag
+    - stage: Pre-Tag
+      php: 7.2
+      name: PHPmetrics
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require phpmetrics/phpmetrics:^2.4.1 --working-dir=../tools
+        - sh install-phalcon.sh
+      install:
+        - composer update
+      script:
+        - php ../tools/vendor/bin/phpmetrics . --exclude=vendor
     - stage: Pre-Tag
       php: 7.2
       name: PHP Semver Checker
@@ -133,4 +145,3 @@ jobs:
       install: composer update
       script:
         - ../tools/php-semver-checker-git/bin/php-semver-checker-git suggest --allow-detached --details --include-before=src --include-after=src
-
