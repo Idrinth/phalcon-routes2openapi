@@ -4,6 +4,7 @@ namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\DefaultResponse;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class DefaultResponseTest extends TestCase
 {
@@ -12,12 +13,21 @@ class DefaultResponseTest extends TestCase
      */
     public function provideAdd(): array
     {
-        $default = ['summary' => '', 'description' => '', 'responses' => ['200' => ['description' => 'unknown return','content' => ['*/*' => ['schema' => new \stdClass()]]]]];
+        $default = [
+            'summary' => '',
+            'description' => '',
+            'responses' => [
+                '200' => ['description' => 'unknown return','content' => ['*/*' => ['schema' => new stdClass()]]]
+            ]
+        ];
         return [
             'empty' => [[], $default],
             'existing summary' => [['summary' => 'a'], array_merge($default, ['summary' => 'a'])],
             'existing description' => [['description' => 'b'], array_merge($default, ['description' => 'b'])],
-            'existing response' => [['responses' => ['200' => []]], array_merge($default, ['responses' => ['200' => []]])],
+            'existing response' => [
+                ['responses' => ['200' => []]],
+                array_merge($default, ['responses' => ['200' => []]])
+            ],
         ];
     }
 
