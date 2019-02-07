@@ -37,7 +37,7 @@ class DefaultResponseTest extends TestCase
      * @param array $expectation
      * @return void
      */
-    public function testAdd(array $route, array $expectation): void
+    public function testAdd(array $route, array $expectation)
     {
         self::assertEquals($expectation, DefaultResponse::add($route));
     }
