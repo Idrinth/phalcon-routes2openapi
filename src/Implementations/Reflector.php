@@ -49,7 +49,9 @@ class Reflector implements PathTargetAnnotationResolver
                 $this->cache[$class]['____class'] = new ReflectionClass($class);
             }
             if (!isset($this->cache[$class][$method])) {
-                $this->cache[$class][$method] = DefaultResponse::add($this->getReflect($this->cache[$class]['____class'], $method));
+                $this->cache[$class][$method] = DefaultResponse::add(
+                    $this->getReflect($this->cache[$class]['____class'], $method)
+                );
             }
         } catch (Exception $e) {
             $this->cache[$class][$method] = DefaultResponse::add([
