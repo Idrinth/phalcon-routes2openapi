@@ -49,16 +49,17 @@ class Reflector implements PathTargetAnnotationResolver
                 $this->cache[$class]['____class'] = new ReflectionClass($class);
             }
             if (!isset($this->cache[$class][$method])) {
-                $this->cache[$class][$method] = $this->getReflect($this->cache[$class]['____class'], $method);
+                $this->cache[$class][$method] = DefaultResponse::add(
+                    $this->getReflect($this->cache[$class]['____class'], $method)
+                );
             }
-            return $this->cache[$class][$method];
         } catch (Exception $e) {
-            return [
-                "description" => '',
-                "summary" => '',
-                "responses" => []
-            ];
+            $this->cache[$class][$method] = DefaultResponse::add([
+                "summary" => 'unretrievable definition',
+                "description" => "$class::$method could not be reflected on.",
+            ]);
         }
+        return $this->cache[$class][$method];
     }
 
     /**

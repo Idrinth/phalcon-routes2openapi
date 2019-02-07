@@ -5,10 +5,11 @@ namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\NoValueConversionMerger;
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Reflector;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Description;
+use phpDocumentor\Reflection\DocBlock\Tags\Generic;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
-use phpDocumentor\Reflection\DocBlock\Tags\Generic;
-use phpDocumentor\Reflection\DocBlock\Description;
+use stdClass;
 
 class ReflectorTest extends TestCase
 {
@@ -27,7 +28,16 @@ class ReflectorTest extends TestCase
                 [
                     "description" => "",
                     "summary" => "",
-                    "responses" => []
+                    "responses" => [
+                        '200' => [
+                            'description' => 'unknown return',
+                            'content' => [
+                                '*/*' => [
+                                    'schema' => new stdClass()
+                                ]
+                            ]
+                        ]
+                    ]
                 ],
                 []
             ],
@@ -35,7 +45,16 @@ class ReflectorTest extends TestCase
                 [
                     "description" => "",
                     "summary" => "",
-                    "responses" => []
+                    "responses" => [
+                        '200' => [
+                            'description' => 'unknown return',
+                            'content' => [
+                                '*/*' => [
+                                    'schema' => new stdClass()
+                                ]
+                            ]
+                        ]
+                    ]
                 ],
                 [$this->getTag('any-tag', "abc qq")]
             ],
@@ -47,7 +66,7 @@ class ReflectorTest extends TestCase
                         700 => [
                             'description' => '',
                             'content' => ['abc/def' => [
-                                'schema' => new \stdClass()
+                                'schema' => new stdClass()
                             ]]
                         ]
                     ]
@@ -62,7 +81,7 @@ class ReflectorTest extends TestCase
                         700 => [
                             'description' => '',
                             'content' => ['abc/def' => [
-                                'schema' => new \stdClass()
+                                'schema' => new stdClass()
                             ]]
                         ]
                     ]
@@ -78,10 +97,10 @@ class ReflectorTest extends TestCase
                             'description' => '',
                             'content' => [
                                 'abc/def' => [
-                                    'schema' => new \stdClass()
+                                    'schema' => new stdClass()
                                 ],
                                 'abc/defg' => [
-                                    'schema' => new \stdClass()
+                                    'schema' => new stdClass()
                                 ]
                             ]
                         ]

@@ -65,13 +65,14 @@ class PhalconPath2PathArray implements Path2PathConverter
                 $parts = explode(':', substr($match, 1, -1), 2);
                 $param = [
                     'in' => 'path',
-                    'name' => $parts[0]
+                    'name' => $parts[0],
+                    'required' => true,
+                    'schema' => [
+                        'type' => 'string',
+                        'pattern' => count($parts) === 2 ? $parts[1] : '.+'
+                    ]
                 ];
                 if (count($parts) === 2) {
-                    $param['schema'] = [
-                        'type' => 'string',
-                        'pattern' => $parts[1]
-                    ];
                     $path = str_replace($match, '{'.$parts[0].'}', $path);
                 }
                 $openapi['parameters'][] = $param;
@@ -94,6 +95,7 @@ class PhalconPath2PathArray implements Path2PathConverter
                 $openapi['parameters'][] = [
                     'name' => $name,
                     'in' => 'path',
+                    'required' => true,
                     'schema' => [
                         'type' => 'string',
                         'pattern' => $match
@@ -120,8 +122,13 @@ class PhalconPath2PathArray implements Path2PathConverter
             (string) ($route->getPaths()['controller'] ?? ''),
             (string) ($route->getPaths()['action'] ?? '')
         );
+        $methods = ['get'];
         foreach ((array)$route->getHttpMethods() as $method) {
+            $methods[] = strtolower($method);
             $openapi[strtolower($method)] = $this->merger->merge((array) ($openapi[strtolower($method)]??[]), $data);
+        }
+        foreach (array_unique($methods) as $method) {
+            $openapi[$method] = DefaultResponse::add($openapi[$method]??[]);
         }
         ksort($openapi);
         return [$path => $openapi];
