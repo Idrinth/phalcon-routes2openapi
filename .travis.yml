@@ -14,6 +14,16 @@ jobs:
   include:
 # PHP Linting
     - stage: PHP Linting
+      php: 7.3
+      name: PHP 7.3
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+      install: true
+      script:
+        - ../tools/vendor/bin/parallel-lint --exclude vendor .
+    - stage: PHP Linting
       php: 7.2
       name: PHP 7.2
       before_install:
@@ -45,8 +55,8 @@ jobs:
         - ../tools/vendor/bin/parallel-lint --exclude vendor .
 # Unit Tests
     - stage: Test
-      php: 7.2
-      name: PHP 7.2
+      php: 7.3
+      name: PHP 7.3
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
@@ -56,6 +66,15 @@ jobs:
       script:
         - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
         - ../tools/vendor/bin/codacycoverage clover clover.xml
+    - stage: Test
+      php: 7.2
+      name: PHP 7.2
+      before_install:
+        - sh install-phalcon.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
     - stage: Test
       php: 7.1
       name: PHP 7.1
@@ -78,7 +97,7 @@ jobs:
         - vendor/bin/phpunit --testdox test/
 # Static Code Analysis
     - stage: Static Code Analysis
-      php: 7.2
+      php: 7.3
       name: PHP Assumptions
       before_install:
         - phpenv config-rm xdebug.ini || true
@@ -89,7 +108,7 @@ jobs:
       script:
         - ../tools/vendor/bin/phpa --exclude=./vendor ./
     - stage: Static Code Analysis
-      php: 7.2
+      php: 7.3
       name: "PHP Codesniffer: PSR2"
       before_install:
         - phpenv config-rm xdebug.ini || true
@@ -99,7 +118,7 @@ jobs:
       script:
         - ../tools/vendor/bin/phpcs -p --standard=PSR2 .
     - stage: Static Code Analysis
-      php: 7.2
+      php: 7.3
       name: Composer Require Checker
       before_install:
         - phpenv config-rm xdebug.ini || true
@@ -110,7 +129,7 @@ jobs:
       script:
         - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
     - stage: Static Code Analysis
-      php: 7.2
+      php: 7.3
       name: PHPstan
       before_install:
         - phpenv config-rm xdebug.ini || true
@@ -123,7 +142,7 @@ jobs:
         - ../tools/vendor/bin/phpstan analyse --level max src test
 # Pre-Tag
     - stage: Pre-Tag
-      php: 7.2
+      php: 7.3
       name: PHPmetrics
       before_install:
         - phpenv config-rm xdebug.ini || true
@@ -135,7 +154,7 @@ jobs:
       script:
         - php ../tools/vendor/bin/phpmetrics . --exclude=vendor
     - stage: Pre-Tag
-      php: 7.2
+      php: 7.3
       name: PHP Semver Checker
       before_install:
         - phpenv config-rm xdebug.ini || true
