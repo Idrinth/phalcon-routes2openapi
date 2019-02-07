@@ -378,7 +378,7 @@ class Path2PathTest extends TestCase
      * @test
      * @dataProvider provideConvert
      * @param string $path
-     * @param string[]|string $methods
+     * @param string[] $methods
      * @param int $calls
      * @param array $config
      * @param array $result
