@@ -7,6 +7,7 @@ use De\Idrinth\PhalconRoutes2OpenApi\Implementations\PhalconPath2PathArray;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use Phalcon\Mvc\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class Path2PathTest extends TestCase
 {
@@ -37,70 +38,129 @@ class Path2PathTest extends TestCase
     {
         return [
             [
-                $this->makeRoute('/', ['GET']),
+                '/',
+                ['GET'],
+                0,
+                [],
                 [
                     "/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ]
             ],
             [
-                $this->makeRoute('/{var}/', ['GET']),
+                '/{var}/',
+                ['GET'],
+                0,
+                [],
                 [
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "var",
-                                "in" => "path"
+                                "in" => "path",
+                                "required" => true,
+                                'schema' => [
+                                    'type' => 'string',
+                                    'pattern' => '.+'
+                                ],
                             ]
                         ]
                     ]
                 ]
             ],
             [
-                $this->makeRoute('#^/request/{id}/$#u', ['GET']),
+                '#^/request/{id}/$#u',
+                ['GET'],
+                0,
+                [],
                 [
                     "/request/{id}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "id",
-                                "in" => "path"
+                                "in" => "path",
+                                "required" => true,
+                                'schema' => [
+                                    'type' => 'string',
+                                    'pattern' => '.+'
+                                ],
                             ]
                         ]
                     ]
                 ]
             ],
             [
-                $this->makeRoute('/admin/:controller/a/:action/:params/', ['GET']),
+                '/admin/:controller/a/:action/:params/',
+                ['GET'],
+                0,
+                [],
                 [
                     "/admin/{controller}/a/{action}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "controller",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "([a-zA-Z0-9\_\-]+)"
@@ -109,6 +169,7 @@ class Path2PathTest extends TestCase
                             [
                                 "name" => "action",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "([a-zA-Z0-9\_\-]+)"
@@ -119,19 +180,32 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/{var:[0-9]+}/', ['GET']),
+                '/{var:[0-9]+}/',
+                ['GET'],
+                0,
+                [],
                 [
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "var",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "[0-9]+"
@@ -142,19 +216,32 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/', ['GET'], 1, [1 => 'var']),
+                '/([0-9a-z]+)/',
+                ['GET'],
+                1,
+                [1 => 'var'],
                 [
                     "/{var}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "var",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "[0-9a-z]+"
@@ -165,19 +252,32 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/([0-9a-z]+)/hi/([0-9a-z]+)/', ['GET'], 1, [1 => 'var', 2 => 'abc']),
+                '/([0-9a-z]+)/hi/([0-9a-z]+)/',
+                ['GET'],
+                1,
+                [1 => 'var', 2 => 'abc'],
                 [
                     "/{var}/hi/{abc}/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "var",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "[0-9a-z]+"
@@ -186,6 +286,7 @@ class Path2PathTest extends TestCase
                             [
                                 "name" => "abc",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "[0-9a-z]+"
@@ -196,37 +297,71 @@ class Path2PathTest extends TestCase
                 ]
             ],
             [
-                $this->makeRoute('/', ['GET', 'TRACE']),
+                '/',
+                ['GET', 'TRACE'],
+                0,
+                [],
                 [
                     "/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "trace" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ]
             ],
             [
-                $this->makeRoute('/any/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}/here/', ['GET']),
+                '/any/{date:[0-9]{4}-[0-9]{2}-[0-9]{2}}/here/',
+                ['GET'],
+                0,
+                [],
                 [
                     "/any/{date}/here/" => [
                         "description" => "",
                         "get" => [
                             "description" => '',
                             "summary" => '',
-                            "responses" => []
+                            "responses" => [
+                                '200' => [
+                                    "description" => 'unknown return',
+                                    'content' => [
+                                        '*/*' => [
+                                            'schema' => new stdClass()
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ],
                         "parameters" => [
                             [
                                 "name" => "date",
                                 "in" => "path",
+                                "required" => true,
                                 "schema" => [
                                     "type" => "string",
                                     "pattern" => "[0-9]{4}-[0-9]{2}-[0-9]{2}"
@@ -242,12 +377,21 @@ class Path2PathTest extends TestCase
     /**
      * @test
      * @dataProvider provideConvert
-     * @param RouteInterface $route
+     * @param string $path
+     * @param string[]|string $methods
+     * @param int $calls
+     * @param array $config
      * @param array $result
      * @return void
      */
-    public function testConvert(RouteInterface $route, array $result)
-    {
+    public function testConvert(
+        string $path,
+        array $methods,
+        int $calls,
+        array $config,
+        array $result
+    ) {
+        $route = $this->makeRoute($path, $methods, $calls, $config);
         $annotations = $this->getMockBuilder(PathTargetAnnotationResolver::class)->getMock();
         $annotations->expects(static::any())
             ->method('__invoke')

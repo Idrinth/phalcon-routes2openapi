@@ -34,8 +34,9 @@ class Controller extends PhalconController implements ControllerInterface
     public function index(): ResponseInterface
     {
         $paths = [];
+        $converter = $this->di->get(Path2PathConverter::class);
         foreach ($this->router->getRoutes() as $route) {
-            $paths[] = $this->di->get(Path2PathConverter::class)->convert($route);
+            $paths[] = $converter->convert($route);
         }
         $merger = $this->di->get(RecursiveMerger::class);
         return $this
