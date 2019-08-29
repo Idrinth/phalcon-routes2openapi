@@ -1,31 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Controller as ControllerInterface;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
-use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
+use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger as RMI;
+use PackageVersions\Versions;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller as PhalconController;
 
 class Controller extends PhalconController implements ControllerInterface
 {
-    /**
-     * @var string
-     */
-    private $root;
-
-    /**
-     * @var array
-     */
-    private static $body = [
-        "openapi"=> "3.0.1",
-        "info"=> [
-            "title"=> "unknown",
-            "version"=> "1.0.0"
-        ]
-    ];
-
     /**
      * Generates an overview over routes registered
      * @return-200 application/json {"type":"object"}
@@ -38,17 +23,16 @@ class Controller extends PhalconController implements ControllerInterface
         foreach ($this->router->getRoutes() as $route) {
             $paths[] = $converter->convert($route);
         }
-        $merger = $this->di->get(RecursiveMerger::class);
         return $this
             ->getCorsEnabledResponse()
             ->setJsonContent(
-                $merger->merge(
-                    self::$body,
-                    [
-                        'paths' => $merger->mergeAll(...$paths),
-                        'info' => (new Composer())(dirname(__DIR__, 5).'/composer.json')
+                [
+                    'paths' => $this->di->get(RMI::class)->mergeAll(...$paths),
+                    'info' => [
+                        "title"=> Versions::ROOT_PACKAGE_NAME,
+                        "version"=> Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
                     ]
-                )
+                ]
             );
     }
 
@@ -95,15 +79,5 @@ class Controller extends PhalconController implements ControllerInterface
                 $this->request->getHeader('Origin') ?: '*'
             )
             ->setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    }
-
-    /**
-     * @param string $root
-     * @return ControllerInterface
-     */
-    public function setRoot(string $root): ControllerInterface
-    {
-        $this->root = $root;
-        return $this;
     }
 }

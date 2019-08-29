@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
@@ -6,12 +6,6 @@ use Phalcon\Http\ResponseInterface;
 
 interface Controller
 {
-    /**
-     * Sets the api's root, used for filtering
-     * @param string $root
-     */
-    public function setRoot(string $root):Controller;
-
     /**
      * generates api-documentation
      * @return ResponseInterface

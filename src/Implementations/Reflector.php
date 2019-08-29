@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
@@ -46,11 +46,11 @@ class Reflector implements PathTargetAnnotationResolver
     {
         try {
             if (!isset($this->cache[$class])) {
-                $this->cache[$class]['____class'] = new ReflectionClass($class);
+                $this->cache[$class]['#'] = new ReflectionClass($class);
             }
             if (!isset($this->cache[$class][$method])) {
                 $this->cache[$class][$method] = DefaultResponse::add(
-                    $this->getReflect($this->cache[$class]['____class'], $method)
+                    $this->getReflect($this->cache[$class]['#'], $method)
                 );
             }
         } catch (Exception $e) {
