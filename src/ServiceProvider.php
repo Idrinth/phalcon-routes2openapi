@@ -63,7 +63,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     private function registerRoutes(RouterInterface $router)
     {
-        $router->addGet($this->apiRoot, ['controller' => Controller::class, 'action' => 'index']);
-        $router->addOptions($this->apiRoot, ['controller' => Controller::class, 'action' => 'options']);
+        $router->addGet('/', ['controller' => Controller::class, 'action' => 'index']);
+        $router->addOptions('/', ['controller' => Controller::class, 'action' => 'options']);
     }
 }
