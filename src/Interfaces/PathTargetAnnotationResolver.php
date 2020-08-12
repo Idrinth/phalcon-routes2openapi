@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
+/**
+ * A service to resolve annotations in phpdoc to openapi paths
+ */
 interface PathTargetAnnotationResolver
 {
     /**

@@ -6,6 +6,9 @@ namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
 use Phalcon\Http\ResponseInterface;
 
+/**
+ * Probvides the endpoints for the documentation route, / by default
+ */
 interface Controller
 {
     /**
