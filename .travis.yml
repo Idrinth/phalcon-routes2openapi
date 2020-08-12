@@ -12,6 +12,7 @@ cache:
     - ~/cphalcon
 jobs:
   include:
+
 # PHP Linting
     - stage: PHP Linting
       php: 7.4
@@ -63,63 +64,7 @@ jobs:
       install: true
       script:
         - ../tools/vendor/bin/parallel-lint --exclude vendor .
-# Unit Tests
-    - stage: Test
-      php: 7.4
-      name: PHP 7.4
-      before_install:
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require codacy/coverage:dev-master --working-dir=../tools
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
-        - ../tools/vendor/bin/codacycoverage clover clover.xml
-    - stage: Test
-      php: 7.3
-      name: PHP 7.3
-      before_install:
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require codacy/coverage:dev-master --working-dir=../tools
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
-        - ../tools/vendor/bin/codacycoverage clover clover.xml
-    - stage: Test
-      php: 7.2
-      name: PHP 7.2
-      before_install:
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require codacy/coverage:dev-master --working-dir=../tools
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
-        - ../tools/vendor/bin/codacycoverage clover clover.xml
-    - stage: Test
-      php: 7.1
-      name: PHP 7.1
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox test/
-    - stage: Test
-      php: 7.0
-      name: PHP 7.0
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox test/
+
 # Static Code Analysis
     - stage: Static Code Analysis
       php: 7.4
@@ -138,22 +83,105 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require maglnet/composer-require-checker:^2.1 --working-dir=../tools
-        - sh install-phalcon.sh
+        - sh install-phalcon_4.sh
       install: composer update
       script:
         - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
     - stage: Static Code Analysis
       php: 7.4
-      name: PHPstan
+      name: PHPstan@4
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phpstan/phpstan:^0.12 phpstan/phpstan-phpunit:^0.12 phpstan/phpstan-strict-rules:^0.12 --working-dir=../tools
-        - sh install-phalcon.sh
+        - sh install-phalcon_4.sh
       install:
         - composer update
       script:
         - ../tools/vendor/bin/phpstan analyse --level max src test
+    - stage: Static Code Analysis
+      php: 7.2
+      name: PHPstan@3
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require phpstan/phpstan:^0.12 phpstan/phpstan-phpunit:^0.12 phpstan/phpstan-strict-rules:^0.12 --working-dir=../tools
+        - sh install-phalcon_3.sh
+      install:
+        - composer update
+      script:
+        - ../tools/vendor/bin/phpstan analyse --level max src test
+
+# Unit Tests
+    - stage: Test
+      php: 7.4
+      name: PHP 7.4@4
+      before_install:
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require codacy/coverage:dev-master --working-dir=../tools
+        - sh install-phalcon_4.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
+    - stage: Test
+      php: 7.3
+      name: PHP 7.3@4
+      before_install:
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require codacy/coverage:dev-master --working-dir=../tools
+        - sh install-phalcon_4.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
+    - stage: Test
+      php: 7.2
+      name: PHP 7.2@4
+      before_install:
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require codacy/coverage:dev-master --working-dir=../tools
+        - sh install-phalcon_4.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
+    - stage: Test
+      php: 7.2@3
+      name: PHP 7.2
+      before_install:
+        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
+        - composer require codacy/coverage:dev-master --working-dir=../tools
+        - sh install-phalcon_3.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
+        - ../tools/vendor/bin/codacycoverage clover clover.xml
+    - stage: Test
+      php: 7.1@3
+      name: PHP 7.1
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - sh install-phalcon.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+    - stage: Test
+      php: 7.0
+      name: PHP 7.0
+      before_install:
+        - phpenv config-rm xdebug.ini || true
+        - sh install-phalcon_3.sh
+      install:
+        - composer update
+      script:
+        - vendor/bin/phpunit --testdox test/
+
 # Pre-Tag
     - stage: Pre-Tag
       php: 7.4
