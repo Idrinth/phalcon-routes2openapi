@@ -78,29 +78,29 @@ jobs:
         - ../tools/vendor/bin/phpcs -p --standard=PSR12 .
     - stage: Static Code Analysis
       php: 7.4
-      name: PHPstan@4
+      name: PHAN@4
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.12 phpstan/phpstan-phpunit:^0.12 phpstan/phpstan-strict-rules:^0.12 --working-dir=../tools
+        - composer require phan/phan
         - pecl install psr
         - sh install-phalcon_4.sh
       install:
         - composer update
       script:
-        - ../tools/vendor/bin/phpstan analyse --level max src test
+        - ../tools/vendor/bin/phan
     - stage: Static Code Analysis
       php: 7.2
-      name: PHPstan@3
+      name: PHAN@3
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.12 phpstan/phpstan-phpunit:^0.12 phpstan/phpstan-strict-rules:^0.12 --working-dir=../tools
+        - composer require phan/phan --working-dir=../tools
         - sh install-phalcon_3.sh
       install:
         - composer update
       script:
-        - ../tools/vendor/bin/phpstan analyse --level max src test
+        - ../tools/vendor/bin/phan
 
 # Unit Tests
     - stage: Test
