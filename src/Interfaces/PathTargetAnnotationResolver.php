@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
@@ -10,5 +10,5 @@ interface PathTargetAnnotationResolver
      * @param string $method
      * @return array
      */
-    public function __invoke(string $class, string $method):array;
+    public function __invoke(string $class, string $method): array;
 }

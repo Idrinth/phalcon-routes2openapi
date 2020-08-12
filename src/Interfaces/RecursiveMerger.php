@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
@@ -15,5 +15,5 @@ interface RecursiveMerger
      * @param array ...$sets each array to be merged into the first as a parameter
      * @return array
      */
-    public function mergeAll(...$sets): array;
+    public function mergeAll(array ...$sets): array;
 }
