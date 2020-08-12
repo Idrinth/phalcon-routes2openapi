@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi;
 
@@ -19,21 +19,13 @@ use phpDocumentor\Reflection\DocBlockFactoryInterface;
 class ServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param string $apiRoot
-     */
-    public function __construct(string $apiRoot = '/')
-    {
-        $this->apiRoot = ($apiRoot{0}==='/' ? '' : '/') . $apiRoot;
-    }
-
-    /**
      * Registers controller at api-root
      * @param DiInterface $serviceContainer
      * @return void
      */
     public function register(DiInterface $serviceContainer)
     {
-        $this->registerServices($serviceContainer, $this->apiRoot);
+        $this->registerServices($serviceContainer);
         $this->registerRoutes($serviceContainer->get('router'));
     }
 
@@ -42,10 +34,10 @@ class ServiceProvider implements ServiceProviderInterface
      * @param string $root
      * @return void
      */
-    private function registerServices(DiInterface $serviceContainer, string $root)
+    private function registerServices(DiInterface $serviceContainer)
     {
-        $serviceContainer->set(Controller::class, function () use ($root) {
-            return (new ControllerImplementation())->setRoot($root);
+        $serviceContainer->set(Controller::class, function () {
+            return (new ControllerImplementation());
         });
         $serviceContainer->set(Path2PathConverter::class, function () use (&$serviceContainer) {
             return new PhalconPath2PathArray(

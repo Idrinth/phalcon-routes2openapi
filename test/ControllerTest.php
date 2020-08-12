@@ -36,7 +36,6 @@ class ControllerTest extends TestCase
         return [
             [
                 $this->buildRouterMock(),
-                '/',
                 [
                     "openapi" => "3.0.1",
                     "info" => [
@@ -52,7 +51,6 @@ class ControllerTest extends TestCase
             ],
             [
                 $this->buildRouterMock(),
-                '/hi/',
                 [
                     "openapi" => "3.0.1",
                     "info" => [
@@ -76,11 +74,9 @@ class ControllerTest extends TestCase
     {
         return [
             [
-                '/',
                 '',
             ],
             [
-                '/',
                 'http://abc.de',
             ],
         ];
@@ -88,14 +84,12 @@ class ControllerTest extends TestCase
 
     /**
      * @param DiInterface $serviceContainer
-     * @param string $root
      * @return Controller
      */
-    private function getBasePreparedInstance(DiInterface $serviceContainer, string $root): Controller
+    private function getBasePreparedInstance(DiInterface $serviceContainer): Controller
     {
         $instance           = new Controller();
         $instance->request  = $this->getMockBuilder(RequestInterface::class)->getMock();
-        $instance->setRoot($root);
         $instance->setDI($serviceContainer);
         $instance->response = $this->getMockBuilder(ResponseInterface::class)->getMock();
         $instance->response->expects(static::exactly(2))
@@ -106,11 +100,10 @@ class ControllerTest extends TestCase
 
     /**
      * @param RouterInterface $router
-     * @param string $root
      * @param array $result
      * @return Controller
      */
-    private function getPreparedInstance(RouterInterface $router, string $root, array $result): Controller
+    private function getPreparedInstance(RouterInterface $router, array $result): Controller
     {
         $serviceContainer   = $this->getMockBuilder(DiInterface::class)->getMock();
         $p2p                = $this->getMockBuilder(Path2PathConverter::class)->getMock();
@@ -157,7 +150,7 @@ class ControllerTest extends TestCase
                 [RecursiveMerger::class]
             )
             ->willReturnOnConsecutiveCalls($p2p, $merger);
-        $instance           = $this->getBasePreparedInstance($serviceContainer, $root);
+        $instance           = $this->getBasePreparedInstance($serviceContainer);
         $instance->router   = $router;
         $instance->response->expects(static::once())
             ->method('setJsonContent')
@@ -170,13 +163,12 @@ class ControllerTest extends TestCase
      * @test
      * @dataProvider provideIndex
      * @param RouterInterface $router
-     * @param string $root
      * @param array $result
      * @return void
      */
-    public function testIndex(RouterInterface $router, string $root, array $result)
+    public function testIndex(RouterInterface $router, array $result)
     {
-        $instance = $this->getPreparedInstance($router, $root, $result);
+        $instance = $this->getPreparedInstance($router, $result);
         static::assertSame($instance->response, $instance->index());
     }
 
@@ -184,13 +176,12 @@ class ControllerTest extends TestCase
      * @test
      * @dataProvider provideIndex
      * @param RouterInterface $router
-     * @param string $root
      * @param array $result
      * @return void
      */
-    public function testIndexAction(RouterInterface $router, string $root, array $result)
+    public function testIndexAction(RouterInterface $router, array $result)
     {
-        $instance = $this->getPreparedInstance($router, $root, $result);
+        $instance = $this->getPreparedInstance($router, $result);
         static::assertSame($instance->response, $instance->indexAction());
     }
 
@@ -220,16 +211,16 @@ class ControllerTest extends TestCase
             )
             ->willReturnSelf();
     }
+
     /**
      * @test
      * @dataProvider provideOptions
-     * @param string $root
      * @param string $origin
      * @return void
      */
-    public function testOptions(string $root, string $origin)
+    public function testOptions(string $origin)
     {
-        $instance = $this->getBasePreparedInstance($this->getMockBuilder(DiInterface::class)->getMock(), $root);
+        $instance = $this->getBasePreparedInstance($this->getMockBuilder(DiInterface::class)->getMock());
         $this->prepareInstanceForOptions($instance, $origin);
         static::assertSame($instance->response, $instance->options());
     }
@@ -237,13 +228,12 @@ class ControllerTest extends TestCase
     /**
      * @test
      * @dataProvider provideOptions
-     * @param string $root
      * @param string $origin
      * @return void
      */
-    public function testOptionsAction(string $root, string $origin)
+    public function testOptionsAction(string $origin)
     {
-        $instance = $this->getBasePreparedInstance($this->getMockBuilder(DiInterface::class)->getMock(), $root);
+        $instance = $this->getBasePreparedInstance($this->getMockBuilder(DiInterface::class)->getMock());
         $this->prepareInstanceForOptions($instance, $origin);
         static::assertSame($instance->response, $instance->optionsAction());
     }
