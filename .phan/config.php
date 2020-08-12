@@ -19,7 +19,8 @@ return [
     'directory_list' => [
         'src',
         'vendor',
-        'test',
+        // @todo reactivate
+        //'test',
     ],
     'analyzed_file_extensions' => ['php'],
     'exclude_analysis_directory_list' => [
@@ -35,7 +36,15 @@ return [
     ],
     'suppress_issue_types' => [
         'PhanPluginRedundantReturnComment',
-        'PhanPluginRedundantMethodComment'
+        'PhanPluginRedundantMethodComment',
+        'PhanUnreferencedPublicMethod',
+        'PhanPluginDescriptionlessCommentOnPrivateProperty',
+        'PhanPluginCanUsePHP71Void',
+        'PhanUnreferencedClosure',
+        'PhanPluginPossiblyStaticPrivateMethod',
+        'PhanPluginPossiblyStaticClosure',
+        //@ todo reactivate
+        
     ],
     'plugins' => [
         'AlwaysReturnPlugin',

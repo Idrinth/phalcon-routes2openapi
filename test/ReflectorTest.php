@@ -11,7 +11,7 @@ use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ReflectorTest extends TestCase
+final class ReflectorTest extends TestCase
 {
     private function getTag(string $name, string $description): Generic
     {
