@@ -116,10 +116,10 @@ class ControllerTest extends TestCase
             ->method('merge')
             ->with(
                 [
-                    "openapi"=> "3.0.1",
-                    "info"=> [
-                        "title"=> "unknown",
-                        "version"=> "1.0.0"
+                    "openapi" => "3.0.1",
+                    "info" => [
+                        "title" => "unknown",
+                        "version" => "1.0.0"
                     ]
                 ],
                 [
@@ -130,10 +130,10 @@ class ControllerTest extends TestCase
                 ]
             )
             ->willReturn([
-                "openapi"=> "3.0.1",
-                "info"=> [
-                    "title"=> "unknown",
-                    "version"=> "1.0.0"
+                "openapi" => "3.0.1",
+                "info" => [
+                    "title" => "unknown",
+                    "version" => "1.0.0"
                 ],
                 "paths" => [
                     '/abc' => ['get' => []]

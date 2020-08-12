@@ -1,5 +1,6 @@
 #!/bin/sh
 mkdir tmp && \
+pecl install psr && \
 mv composer.json tmp/ && \
 composer require --dev techpivot/phalcon-ci-installer && \
 vendor/bin/install-phalcon.sh 4.0.x && \

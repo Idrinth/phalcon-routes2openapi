@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
@@ -29,8 +31,8 @@ class Controller extends PhalconController implements ControllerInterface
                 [
                     'paths' => $this->di->get(RMI::class)->mergeAll(...$paths),
                     'info' => [
-                        "title"=> Versions::ROOT_PACKAGE_NAME,
-                        "version"=> Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
+                        "title" => Versions::ROOT_PACKAGE_NAME,
+                        "version" => Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
                     ]
                 ]
             );

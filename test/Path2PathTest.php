@@ -23,7 +23,7 @@ class Path2PathTest extends TestCase
         array $methods,
         int $calls = 0,
         array $config = array()
-    ):RouteInterface {
+    ): RouteInterface {
         $route = $this->getMockBuilder(RouteInterface::class)->getMock();
         $route->expects(static::once())->method('getPattern')->with()->willReturn($path);
         $route->expects(static::once())->method('getHttpMethods')->with()->willReturn($methods);

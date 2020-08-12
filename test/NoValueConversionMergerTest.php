@@ -34,7 +34,7 @@ class NoValueConversionMergerTest extends TestCase
     {
         static::assertEquals(
             $out,
-            (new NoValueConversionMerger)->merge($in1, $in2)
+            (new NoValueConversionMerger())->merge($in1, $in2)
         );
     }
 
@@ -46,7 +46,7 @@ class NoValueConversionMergerTest extends TestCase
     {
         static::assertEquals(
             ['a' => [1, 2, 4, 'z' => 77], '1hh'],
-            (new NoValueConversionMerger)->mergeAll(
+            (new NoValueConversionMerger())->mergeAll(
                 ['a' => [1, 2]],
                 ['a' => [4, 'z' => 11]],
                 ['a' => ['z' => 77], '1hh']
@@ -62,7 +62,7 @@ class NoValueConversionMergerTest extends TestCase
      */
     public function testMergeAllThrowsInvalidArgumentException()
     {
-        (new NoValueConversionMerger)->mergeAll(
+        (new NoValueConversionMerger())->mergeAll(
             ['a' => [1, 2]],
             ['a' => [4, 'z' => 11]],
             ['a' => ['z' => 77], '1hh'],

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
@@ -42,7 +44,7 @@ class Reflector implements PathTargetAnnotationResolver
      * @param string $method
      * @return array
      */
-    public function __invoke(string $class, string $method):array
+    public function __invoke(string $class, string $method): array
     {
         try {
             if (!isset($this->cache[$class])) {
@@ -67,7 +69,7 @@ class Reflector implements PathTargetAnnotationResolver
      * @param string $method
      * @return array
      */
-    private function getReflect(ReflectionClass $class, string $method):array
+    private function getReflect(ReflectionClass $class, string $method): array
     {
         $docBlock = $this->parser->create($class->getMethod($method));
         $data = [];
@@ -81,7 +83,7 @@ class Reflector implements PathTargetAnnotationResolver
                     }
                 }
                 $data[$matches[1]] = $this->merger->merge(
-                    $data[$matches[1]]??[],
+                    $data[$matches[1]] ?? [],
                     [
                         "description" => '',
                         "content" => [
@@ -94,8 +96,8 @@ class Reflector implements PathTargetAnnotationResolver
             }
         }
         return [
-            "description" => $docBlock->getDescription().'',
-            "summary" => $docBlock->getSummary().'',
+            "description" => $docBlock->getDescription() . '',
+            "summary" => $docBlock->getSummary() . '',
             "responses" => $data
         ];
     }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Interfaces;
 
@@ -11,14 +13,14 @@ interface Controller
      * @return ResponseInterface
      * @return-200 application/json {"type":"object"}
      */
-    public function index():ResponseInterface;
+    public function index(): ResponseInterface;
 
     /**
      * generates api-documentation
      * @return ResponseInterface
      * @return-200 application/json {"type":"object"}
      */
-    public function indexAction():ResponseInterface;
+    public function indexAction(): ResponseInterface;
 
     /**
      * Generates an overview over routes registered
