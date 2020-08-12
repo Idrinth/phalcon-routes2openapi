@@ -1,6 +1,5 @@
 #!/bin/sh
 mkdir tmp && \
-pecl install psr && \
 mv composer.json tmp/ && \
 composer config repositories.phalcon-zephir-update '{"type":"vcs","url":"https://github.com/idrinth/phalcon-ci-installer","no-api":true}' && \
 composer require --dev techpivot/phalcon-ci-installer:dev-patch-1 && \
