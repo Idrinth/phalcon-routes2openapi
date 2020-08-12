@@ -6,10 +6,12 @@ namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
+use Exception;
+use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use ReflectionClass;
 use stdClass;
-use Exception;
 
 /**
  * Uses Reflection to read out method docs and contained route hints
@@ -17,9 +19,14 @@ use Exception;
 class Reflector implements PathTargetAnnotationResolver
 {
     /**
-     * @var array
+     * @var array<string, <string, array>>
      */
     private $cache = [];
+
+    /**
+     * @var array<string, ReflectionClass>
+     */
+    private $classes = [];
 
     /**
      * @var DocBlockFactoryInterface
@@ -45,23 +52,21 @@ class Reflector implements PathTargetAnnotationResolver
      * Tries to find references to return codes in the method's phpdoc
      * @param string $class
      * @param string $method
-     * @return array
+     * @return array<string, array>
      */
     public function __invoke(string $class, string $method): array
     {
         try {
-            if (!isset($this->cache[$class])) {
-                $this->cache[$class]['#'] = new ReflectionClass($class);
-            }
+            $this->classes[$class] = $this->classes[$class] ?? new ReflectionClass($class);
             if (!isset($this->cache[$class][$method])) {
                 $this->cache[$class][$method] = DefaultResponse::add(
-                    $this->getReflect($this->cache[$class]['#'], $method)
+                    $this->getReflect($this->classes[$class], $method)
                 );
             }
         } catch (Exception $e) {
             $this->cache[$class][$method] = DefaultResponse::add([
-                "summary" => 'unretrievable definition',
-                "description" => "$class::$method could not be reflected on.",
+                'summary' => 'unretrievable definition',
+                'description' => "$class::$method could not be reflected on.\n$e",
             ]);
         }
         return $this->cache[$class][$method];
@@ -69,10 +74,10 @@ class Reflector implements PathTargetAnnotationResolver
     
     /**
      * Adds default
-     * @param \De\Idrinth\PhalconRoutes2OpenApi\Implementations\DocBlockTag $tag
+     * @param Tag $tag
      * @return string[]
      */
-    private function addDefaultParts(DocBlockTag $tag): array
+    private function addDefaultParts(Tag $tag): array
     {
         $parts = explode(" ", "$tag", 2);
         if (!isset($parts[0]) || $parts[0] === '' || $parts[0]{0} === '{') {
@@ -83,7 +88,13 @@ class Reflector implements PathTargetAnnotationResolver
         }
         return $parts;
     }
-    private function getDocBlockData($docBlock): array
+
+    /**
+     * Retrieve tags from doc block
+     * @param DocBlock $docBlock
+     * @return array<string, string>|array<string, array>
+     */
+    private function getDocBlockData(DocBlock $docBlock): array
     {
         $data = [];
         foreach ($docBlock->getTags() as $tag) {
@@ -106,7 +117,7 @@ class Reflector implements PathTargetAnnotationResolver
     }
 
     /**
-     * 
+     * Retrieve doc block information and build route data from it
      * @param ReflectionClass $class
      * @param string $method
      * @return array

@@ -14,7 +14,7 @@ use Phalcon\Mvc\Controller as PhalconController;
 /**
  * This is the controller, that handles all requests related to the index route
  */
-class Controller extends PhalconController implements ControllerInterface
+final class Controller extends PhalconController implements ControllerInterface
 {
     /**
      * Generates an overview over routes registered
@@ -53,6 +53,7 @@ class Controller extends PhalconController implements ControllerInterface
 
     /**
      * Generates an overview over routes registered
+     * @suppress PhanPluginDuplicateMethodDescription
      * @return-204 {"type":"string","maxLength":0}
      * @return ResponseInterface
      */
@@ -65,6 +66,7 @@ class Controller extends PhalconController implements ControllerInterface
 
     /**
      * Generates an overview over routes registered
+     * @suppress PhanPluginDuplicateMethodDescription
      * @return-204 {"type":"string","maxLength":0}
      * @return ResponseInterface
      */

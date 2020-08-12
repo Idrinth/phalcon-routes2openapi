@@ -56,7 +56,7 @@ class NoValueConversionMerger implements RecursiveMerger
     public function mergeAll(array ...$sets): array
     {
         $initial = array_shift($sets);
-        foreach ($sets as $pos => $set) {
+        foreach ($sets as $set) {
             $initial = $this->merge($initial, $set);
         }
         return $initial;

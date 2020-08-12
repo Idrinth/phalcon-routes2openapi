@@ -20,6 +20,7 @@ use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
 /**
  * Registers the controller, the services and the routes
+ * @suppress PhanUnreferencedClass
  */
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -35,34 +36,53 @@ class ServiceProvider implements ServiceProviderInterface
     }
 
     /**
+     * Register Services
      * @param DiInterface $serviceContainer
      * @param string $root
      * @return void
      */
     private function registerServices(DiInterface $serviceContainer)
     {
-        $serviceContainer->set(Controller::class, function () {
-            return (new ControllerImplementation());
-        });
-        $serviceContainer->set(Path2PathConverter::class, function () use (&$serviceContainer) {
-            return new PhalconPath2PathArray(
-                $serviceContainer->get(PathTargetAnnotationResolver::class),
-                $serviceContainer->get(RecursiveMerger::class)
-            );
-        });
-        $serviceContainer->set(DocBlockFactoryInterface::class, function () {
-            return DocBlockFactory::createInstance();
-        });
-        $serviceContainer->set(PathTargetAnnotationResolver::class, function () use (&$serviceContainer) {
-            return new Reflector(
-                $serviceContainer->get(DocBlockFactoryInterface::class),
-                $serviceContainer->get(RecursiveMerger::class)
-            );
-        });
+        $serviceContainer->set(Controller::class, ControllerImplementation);
+        $serviceContainer->set(
+            Path2PathConverter::class,
+            /**
+             * @return Path2PathConverter
+             */
+            function () use (&$serviceContainer) {
+                return new PhalconPath2PathArray(
+                    $serviceContainer->get(PathTargetAnnotationResolver::class),
+                    $serviceContainer->get(RecursiveMerger::class)
+                );
+            }
+        );
+        $serviceContainer->set(
+            DocBlockFactoryInterface::class,
+            /**
+             * @return DocBlockFactory
+             */
+            function () {
+                return DocBlockFactory::createInstance();
+            }
+        );
+        $serviceContainer->set(
+            PathTargetAnnotationResolver::class,
+            /**
+             * Creates a Reflector
+             * @return PathTargetAnnotationResolver
+             */
+            function () use (&$serviceContainer): PathTargetAnnotationResolver {
+                return new Reflector(
+                    $serviceContainer->get(DocBlockFactoryInterface::class),
+                    $serviceContainer->get(RecursiveMerger::class)
+                );
+            }
+        );
         $serviceContainer->set(RecursiveMerger::class, NoValueConversionMerger::class);
     }
 
     /**
+     * Register routes
      * @param RouterInterface $router
      * @return void
      */

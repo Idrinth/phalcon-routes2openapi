@@ -35,6 +35,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * Retrieve the basic path a route has
      * @param RouteInterface $route
      * @return string
      */
@@ -59,6 +60,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * adjust openapi array with params
      * @param string $path
      * @param array $openapi
      * @return void
@@ -86,6 +88,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * Add queries to openapi array
      * @param string $path
      * @param array $openapi
      * @param RouteInterface $route
@@ -112,6 +115,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * Create data array from Route
      * @param RouteInterface $route
      * @return array
      */
