@@ -18,6 +18,9 @@ use Phalcon\Mvc\RouterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
+/**
+ * Registers the controller, the services and the routes
+ */
 class ServiceProvider implements ServiceProviderInterface
 {
     /**

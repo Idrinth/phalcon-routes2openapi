@@ -11,6 +11,9 @@ use ReflectionClass;
 use stdClass;
 use Exception;
 
+/**
+ * Uses Reflection to read out method docs and contained route hints
+ */
 class Reflector implements PathTargetAnnotationResolver
 {
     /**
@@ -63,8 +66,47 @@ class Reflector implements PathTargetAnnotationResolver
         }
         return $this->cache[$class][$method];
     }
+    
+    /**
+     * Adds default
+     * @param \De\Idrinth\PhalconRoutes2OpenApi\Implementations\DocBlockTag $tag
+     * @return string[]
+     */
+    private function addDefaultParts(DocBlockTag $tag): array
+    {
+        $parts = explode(" ", "$tag", 2);
+        if (!isset($parts[0]) || $parts[0] === '' || $parts[0]{0} === '{') {
+            array_unshift($parts, '*/*');
+            if (isset($parts[2])) {
+                $parts[1] .= " " . array_pop($parts);
+            }
+        }
+        return $parts;
+    }
+    private function getDocBlockData($docBlock): array
+    {
+        $data = [];
+        foreach ($docBlock->getTags() as $tag) {
+            if ((int) preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches) > 0) {
+                $parts = $this->addDefaultParts($tag);
+                $data[$matches[1]] = $this->merger->merge(
+                    $data[$matches[1]] ?? [],
+                    [
+                        'description' => '',
+                        'content' => [
+                            $parts[0] => [
+                                'schema' => json_decode($parts[1] ?? '{}') ?: new stdClass()
+                            ]
+                        ]
+                    ]
+                );
+            }
+        }
+        return $data;
+    }
 
     /**
+     * 
      * @param ReflectionClass $class
      * @param string $method
      * @return array
@@ -72,33 +114,11 @@ class Reflector implements PathTargetAnnotationResolver
     private function getReflect(ReflectionClass $class, string $method): array
     {
         $docBlock = $this->parser->create($class->getMethod($method));
-        $data = [];
-        foreach ($docBlock->getTags() as $tag) {
-            if ((int) preg_match('/^return-([1-9][0-9]{2})$/', $tag->getName(), $matches) > 0) {
-                $parts = explode(" ", "$tag", 2);
-                if (!isset($parts[0]) || $parts[0] === '' || $parts[0]{0} === '{') {
-                    array_unshift($parts, '*/*');
-                    if (isset($parts[2])) {
-                        $parts[1] .= " " . array_pop($parts);
-                    }
-                }
-                $data[$matches[1]] = $this->merger->merge(
-                    $data[$matches[1]] ?? [],
-                    [
-                        "description" => '',
-                        "content" => [
-                            $parts[0] => [
-                                "schema" => json_decode($parts[1] ?? '{}') ?: new stdClass()
-                            ]
-                        ]
-                    ]
-                );
-            }
-        }
+        $data = $this->getDocBlockData($docBlock);
         return [
-            "description" => $docBlock->getDescription() . '',
-            "summary" => $docBlock->getSummary() . '',
-            "responses" => $data
+            'description' => $docBlock->getDescription() . '',
+            'summary' => $docBlock->getSummary() . '',
+            'responses' => $data
         ];
     }
 }

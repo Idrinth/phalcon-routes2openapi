@@ -11,6 +11,9 @@ use PackageVersions\Versions;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller as PhalconController;
 
+/**
+ * This is the controller, that handles all requests related to the index route
+ */
 class Controller extends PhalconController implements ControllerInterface
 {
     /**
@@ -71,6 +74,7 @@ class Controller extends PhalconController implements ControllerInterface
     }
 
     /**
+     * Return the Response with added Cross-Origin-Resource-Sharing-Headers
      * @return ResponseInterface
      */
     private function getCorsEnabledResponse(): ResponseInterface

@@ -9,6 +9,9 @@ use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Mvc\Router\RouteInterface;
 
+/**
+ * Converts a Phalcon route to an array containing the Open-API required information
+ */
 class PhalconPath2PathArray implements Path2PathConverter
 {
     /**

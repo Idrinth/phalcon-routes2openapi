@@ -14,10 +14,12 @@ return [
     'warn_about_redundant_use_namespaced_class' => true,
     'simplify_ast' => true,
     'generic_types_enabled' => true,
-    'exclude_file_regex' => '@^vendor/phalcon/ide-stubs/@',
+    'exclude_file_regex' => '@^vendor/phalcon/ide-stubs/|vendor/.*/Test.php@',
     'enable_include_path_checks' => true,
     'directory_list' => [
-        'src'
+        'src',
+        'vendor',
+        'test',
     ],
     'analyzed_file_extensions' => ['php'],
     'exclude_analysis_directory_list' => [
@@ -30,6 +32,10 @@ return [
         'empty_statement_list_ignore_todos' => true,
         'infer_pure_methods' => true,
         'regex_warn_if_newline_allowed_at_end' => true,
+    ],
+    'suppress_issue_types' => [
+        'PhanPluginRedundantReturnComment',
+        'PhanPluginRedundantMethodComment'
     ],
     'plugins' => [
         'AlwaysReturnPlugin',
