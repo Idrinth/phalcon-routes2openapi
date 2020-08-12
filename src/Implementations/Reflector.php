@@ -16,10 +16,10 @@ use stdClass;
 /**
  * Uses Reflection to read out method docs and contained route hints
  */
-class Reflector implements PathTargetAnnotationResolver
+final class Reflector implements PathTargetAnnotationResolver
 {
     /**
-     * @var array<string, <string, array>>
+     * @var array<string, array<string, array>>
      */
     private $cache = [];
 
@@ -71,7 +71,7 @@ class Reflector implements PathTargetAnnotationResolver
         }
         return $this->cache[$class][$method];
     }
-    
+
     /**
      * Adds default
      * @param Tag $tag
@@ -120,11 +120,11 @@ class Reflector implements PathTargetAnnotationResolver
      * Retrieve doc block information and build route data from it
      * @param ReflectionClass $class
      * @param string $method
-     * @return array
+     * @return array<string, string>|array<string, array>
      */
     private function getReflect(ReflectionClass $class, string $method): array
     {
-        $docBlock = $this->parser->create($class->getMethod($method));
+        $docBlock = $this->parser->create($class->getMethod($method)->getDocComment());
         $data = $this->getDocBlockData($docBlock);
         return [
             'description' => $docBlock->getDescription() . '',

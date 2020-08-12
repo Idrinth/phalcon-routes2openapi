@@ -22,7 +22,7 @@ use phpDocumentor\Reflection\DocBlockFactoryInterface;
  * Registers the controller, the services and the routes
  * @suppress PhanUnreferencedClass
  */
-class ServiceProvider implements ServiceProviderInterface
+final class ServiceProvider implements ServiceProviderInterface
 {
     /**
      * Registers controller at api-root
@@ -38,18 +38,17 @@ class ServiceProvider implements ServiceProviderInterface
     /**
      * Register Services
      * @param DiInterface $serviceContainer
-     * @param string $root
      * @return void
      */
     private function registerServices(DiInterface $serviceContainer)
     {
-        $serviceContainer->set(Controller::class, ControllerImplementation);
+        $serviceContainer->set(Controller::class, ControllerImplementation::class);
         $serviceContainer->set(
             Path2PathConverter::class,
             /**
              * @return Path2PathConverter
              */
-            function () use (&$serviceContainer) {
+            function () use (&$serviceContainer): Path2PathConverter {
                 return new PhalconPath2PathArray(
                     $serviceContainer->get(PathTargetAnnotationResolver::class),
                     $serviceContainer->get(RecursiveMerger::class)
@@ -61,7 +60,7 @@ class ServiceProvider implements ServiceProviderInterface
             /**
              * @return DocBlockFactory
              */
-            function () {
+            function (): DocBlockFactoryInterface {
                 return DocBlockFactory::createInstance();
             }
         );

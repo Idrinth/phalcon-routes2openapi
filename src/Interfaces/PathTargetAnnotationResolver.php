@@ -13,7 +13,7 @@ interface PathTargetAnnotationResolver
      * Tries to find references to return codes in the method's phpdoc
      * @param string $class
      * @param string $method
-     * @return array
+     * @return array<string, array>
      */
     public function __invoke(string $class, string $method): array;
 }

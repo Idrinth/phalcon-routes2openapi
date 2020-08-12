@@ -14,7 +14,7 @@ interface Path2PathConverter
   /**
    * Converts a phalcon route to a routes array for openapi
    * @param RouteInterface $route
-   * @return array
+   * @return array<string, array>
    */
     public function convert(RouteInterface $route): array;
 }

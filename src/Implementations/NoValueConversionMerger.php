@@ -33,7 +33,7 @@ class NoValueConversionMerger implements RecursiveMerger
 
     /**
      * Merges two multidimensional arrays
-     * @suppress PhanPluginUnknownArrayMethodParamType
+     * @suppress PhanPluginUnknownArrayMethodParamType, PhanPluginUnknownArrayMethodReturnType
      * @param array $array1
      * @param array $array2
      * @return array
@@ -48,7 +48,7 @@ class NoValueConversionMerger implements RecursiveMerger
 
     /**
      * Merges any number of multidimensional arrays with later overwriting earlier
-     * @suppress PhanPluginUnknownArrayMethodParamType
+     * @suppress PhanPluginUnknownArrayMethodParamType, PhanPluginUnknownArrayMethodReturnType
      * @param array[] ...$sets each array to be merged into the first as a parameter
      * @return array
      * @throws InvalidArgumentException

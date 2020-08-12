@@ -9,7 +9,7 @@ use stdClass;
 /**
  * Provides a default route for not correctly defined methods
  */
-class DefaultResponse
+final class DefaultResponse
 {
     /**
      * Add a defaul response of 200 to paths without a defined one

@@ -22,6 +22,7 @@ interface Controller
      * generates api-documentation
      * @return ResponseInterface
      * @return-200 application/json {"type":"object"}
+     * @suppress PhanPluginDuplicateMethodDescription
      */
     public function indexAction(): ResponseInterface;
 
@@ -36,6 +37,7 @@ interface Controller
      * Generates an overview over routes registered
      * @return-204 {"type":"string","maxLength":0}
      * @return ResponseInterface
+     * @suppress PhanPluginDuplicateMethodDescription
      */
-    public function optionsAction();
+    public function optionsAction(): ResponseInterface;
 }

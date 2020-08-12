@@ -12,7 +12,7 @@ use Phalcon\Mvc\Router\RouteInterface;
 /**
  * Converts a Phalcon route to an array containing the Open-API required information
  */
-class PhalconPath2PathArray implements Path2PathConverter
+final class PhalconPath2PathArray implements Path2PathConverter
 {
     /**
      * @var PathTargetAnnotationResolver
@@ -62,7 +62,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     /**
      * adjust openapi array with params
      * @param string $path
-     * @param array $openapi
+     * @param array<string, string|array> $openapi
      * @return void
      */
     private function handleParams(string &$path, array &$openapi)
@@ -90,7 +90,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     /**
      * Add queries to openapi array
      * @param string $path
-     * @param array $openapi
+     * @param array<string, string|array> $openapi
      * @param RouteInterface $route
      * @return void
      */
@@ -117,7 +117,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     /**
      * Create data array from Route
      * @param RouteInterface $route
-     * @return array
+     * @return array<string, <string, array>>
      */
     public function convert(RouteInterface $route): array
     {

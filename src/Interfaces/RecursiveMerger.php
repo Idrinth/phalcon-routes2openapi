@@ -14,6 +14,7 @@ interface RecursiveMerger
      * @param array $array1
      * @param array $array2
      * @return array
+     * @suppress PhanPluginUnknownArrayMethodReturnType, PhanPluginUnknownArrayMethodParamType
      */
     public function merge(array $array1, array $array2): array;
 
@@ -21,6 +22,7 @@ interface RecursiveMerger
      * Merges any number of arrays with any depth
      * @param array ...$sets each array to be merged into the first as a parameter
      * @return array
+     * @suppress PhanPluginUnknownArrayMethodReturnType
      */
     public function mergeAll(array ...$sets): array;
 }
