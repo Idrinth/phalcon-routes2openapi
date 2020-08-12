@@ -83,7 +83,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require maglnet/composer-require-checker:^2.1 --working-dir=../tools
-        - pecl install psr
+        - pecl install psr && cd $TRAVIS_BUILD_DIR
         - sh install-phalcon_4.sh
       install: composer update
       script:
@@ -95,7 +95,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phpstan/phpstan:^0.12 phpstan/phpstan-phpunit:^0.12 phpstan/phpstan-strict-rules:^0.12 --working-dir=../tools
-        - pecl install psr
+        - pecl install psr && cd $TRAVIS_BUILD_DIR
         - sh install-phalcon_4.sh
       install:
         - composer update
@@ -121,7 +121,7 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
-        - pecl install psr
+        - pecl install psr && cd $TRAVIS_BUILD_DIR
         - sh install-phalcon_4.sh
       install:
         - composer update
@@ -134,7 +134,7 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
-        - pecl install psr
+        - pecl install psr && cd $TRAVIS_BUILD_DIR
         - sh install-phalcon_4.sh
       install:
         - composer update
@@ -147,7 +147,7 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
-        - pecl install psr
+        - pecl install psr && cd $TRAVIS_BUILD_DIR
         - sh install-phalcon_4.sh
       install:
         - composer update
