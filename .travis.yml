@@ -84,6 +84,7 @@ jobs:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phan/phan
         - pecl install psr
+        - pecl install ast
         - sh install-phalcon_4.sh
       install:
         - composer update
@@ -96,6 +97,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phan/phan --working-dir=../tools
+        - pecl install ast
         - sh install-phalcon_3.sh
       install:
         - composer update
