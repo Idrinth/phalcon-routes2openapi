@@ -29,7 +29,7 @@ final class ServiceProvider implements ServiceProviderInterface
      * @param DiInterface $serviceContainer
      * @return void
      */
-    public function register(DiInterface $serviceContainer)
+    public function register(DiInterface $serviceContainer): void
     {
         $this->registerServices($serviceContainer);
         $this->registerRoutes($serviceContainer->get('router'));
@@ -40,7 +40,7 @@ final class ServiceProvider implements ServiceProviderInterface
      * @param DiInterface $serviceContainer
      * @return void
      */
-    private function registerServices(DiInterface $serviceContainer)
+    private function registerServices(DiInterface $serviceContainer): void
     {
         $serviceContainer->set(Controller::class, ControllerImplementation::class);
         $serviceContainer->set(
@@ -85,7 +85,7 @@ final class ServiceProvider implements ServiceProviderInterface
      * @param RouterInterface $router
      * @return void
      */
-    private function registerRoutes(RouterInterface $router)
+    private function registerRoutes(RouterInterface $router): void
     {
         $router->addGet('/', ['controller' => Controller::class, 'action' => 'index']);
         $router->addOptions('/', ['controller' => Controller::class, 'action' => 'options']);
