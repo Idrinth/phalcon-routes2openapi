@@ -37,6 +37,7 @@ return [
     'suppress_issue_types' => [
         'PhanPluginRedundantReturnComment',
         'PhanPluginRedundantMethodComment',
+        'PhanPluginRedundantClosureComment',
         'PhanUnreferencedPublicMethod',
         'PhanPluginDescriptionlessCommentOnPrivateProperty',
         'PhanPluginCanUsePHP71Void',

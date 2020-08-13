@@ -168,7 +168,7 @@ jobs:
         - vendor/bin/phpunit --testdox test/
     - stage: Test
       php: 7.0
-      name: PHP 7.0
+      name: PHP 7.0@3
       before_install:
         - phpenv config-rm xdebug.ini || true
         - sh install-phalcon_3.sh

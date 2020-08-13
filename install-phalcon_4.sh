@@ -21,4 +21,4 @@ rm composer.lock && \
 rm composer.json && \
 mv tmp/composer.json ./ && \
 rmdir tmp && \
-rm -r php-zephir-parser
+rm -rf php-zephir-parser

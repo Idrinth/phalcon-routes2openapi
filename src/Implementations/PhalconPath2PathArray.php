@@ -117,7 +117,7 @@ final class PhalconPath2PathArray implements Path2PathConverter
     /**
      * Create data array from Route
      * @param RouteInterface $route
-     * @return array<string, <string, array>>
+     * @return array<string, array<string, array>>
      */
     public function convert(RouteInterface $route): array
     {
