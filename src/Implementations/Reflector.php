@@ -80,7 +80,7 @@ final class Reflector implements PathTargetAnnotationResolver
     private function addDefaultParts(Tag $tag): array
     {
         $parts = explode(" ", "$tag", 2);
-        if (!isset($parts[0]) || $parts[0] === '' || $parts[0]{0} === '{') {
+        if (!isset($parts[0]) || $parts[0] === '' || $parts[0][0] === '{') {
             array_unshift($parts, '*/*');
             if (isset($parts[2])) {
                 $parts[1] .= " " . array_pop($parts);
