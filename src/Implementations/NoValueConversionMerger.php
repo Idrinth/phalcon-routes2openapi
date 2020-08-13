@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
-use InvalidArgumentException;
 
 /**
  * Merges multidimensional arrays
@@ -51,7 +50,6 @@ class NoValueConversionMerger implements RecursiveMerger
      * @suppress PhanPluginUnknownArrayMethodParamType, PhanPluginUnknownArrayMethodReturnType
      * @param array[] ...$sets each array to be merged into the first as a parameter
      * @return array
-     * @throws InvalidArgumentException
      */
     public function mergeAll(array ...$sets): array
     {

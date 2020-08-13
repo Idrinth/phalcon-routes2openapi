@@ -53,20 +53,4 @@ class NoValueConversionMergerTest extends TestCase
             )
         );
     }
-
-    /**
-     * @test
-     * @expectedException InvalidargumentException
-     * @expectedExceptionMessage Set #4 is not an array, but a(n) string.
-     * @return void
-     */
-    public function testMergeAllThrowsInvalidArgumentException()
-    {
-        (new NoValueConversionMerger())->mergeAll(
-            ['a' => [1, 2]],
-            ['a' => [4, 'z' => 11]],
-            ['a' => ['z' => 77], '1hh'],
-            "something else"
-        );
-    }
 }
