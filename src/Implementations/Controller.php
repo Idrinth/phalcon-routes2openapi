@@ -32,6 +32,7 @@ final class Controller extends PhalconController implements ControllerInterface
             ->getCorsEnabledResponse()
             ->setJsonContent(
                 [
+                    'openapi' => '3.0.1',
                     'paths' => $this->di->get(RMI::class)->mergeAll(...$paths),
                     'info' => [
                         "title" => Versions::ROOT_PACKAGE_NAME,
