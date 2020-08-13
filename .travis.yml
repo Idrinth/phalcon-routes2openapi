@@ -65,7 +65,7 @@ jobs:
         - composer require phan/phan --working-dir=../tools
         - pecl install psr
         - pecl install ast
-        - sh install-phalcon_4.sh
+        - sh install-phalcon.sh
       install:
         - composer update
       script:
@@ -79,7 +79,7 @@ jobs:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
         - pecl install psr
-        - sh install-phalcon_4.sh
+        - sh install-phalcon.sh
       install:
         - composer update
       script:
@@ -92,7 +92,7 @@ jobs:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
         - pecl install psr
-        - sh install-phalcon_4.sh
+        - sh install-phalcon.sh
       install:
         - composer update
       script:
@@ -105,7 +105,7 @@ jobs:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
         - pecl install psr
-        - sh install-phalcon_4.sh
+        - sh install-phalcon.sh
       install:
         - composer update
       script:
