@@ -20,7 +20,10 @@
     "autoload": {
         "psr-4": {
             "De\\Idrinth\\PhalconRoutes2OpenApi\\": "src"
-        }
+        },
+        "files": [
+            "src/alias.php"
+        ]
     },
     "require-dev": {
         "phalcon/ide-stubs": "^3.2",

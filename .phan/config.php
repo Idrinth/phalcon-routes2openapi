@@ -22,6 +22,7 @@ return [
         // @todo reactivate
         //'test',
     ],
+    'enable_class_alias_support' => true,
     'analyzed_file_extensions' => ['php'],
     'exclude_analysis_directory_list' => [
         'vendor/'
