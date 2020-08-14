@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
@@ -7,7 +9,10 @@ use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Mvc\Router\RouteInterface;
 
-class PhalconPath2PathArray implements Path2PathConverter
+/**
+ * Converts a Phalcon route to an array containing the Open-API required information
+ */
+final class PhalconPath2PathArray implements Path2PathConverter
 {
     /**
      * @var PathTargetAnnotationResolver
@@ -30,6 +35,7 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * Retrieve the basic path a route has
      * @param RouteInterface $route
      * @return string
      */
@@ -54,8 +60,9 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * adjust openapi array with params
      * @param string $path
-     * @param array $openapi
+     * @param array<string, string|array> $openapi
      * @return void
      */
     private function handleParams(string &$path, array &$openapi)
@@ -73,7 +80,7 @@ class PhalconPath2PathArray implements Path2PathConverter
                     ]
                 ];
                 if (count($parts) === 2) {
-                    $path = str_replace($match, '{'.$parts[0].'}', $path);
+                    $path = str_replace($match, '{' . $parts[0] . '}', $path);
                 }
                 $openapi['parameters'][] = $param;
             }
@@ -81,8 +88,9 @@ class PhalconPath2PathArray implements Path2PathConverter
     }
 
     /**
+     * Add queries to openapi array
      * @param string $path
-     * @param array $openapi
+     * @param array<string, string|array> $openapi
      * @param RouteInterface $route
      * @return void
      */
@@ -91,7 +99,7 @@ class PhalconPath2PathArray implements Path2PathConverter
         if ((int) preg_match_all('/\((.+?)\)/', $path, $matches) > 0) {
             $names = $route->getReversedPaths();
             foreach ($matches[1] as $pos => $match) {
-                $name = $names[$pos+1];
+                $name = $names[$pos + 1];
                 $openapi['parameters'][] = [
                     'name' => $name,
                     'in' => 'path',
@@ -101,16 +109,17 @@ class PhalconPath2PathArray implements Path2PathConverter
                         'pattern' => $match
                     ]
                 ];
-                $path = preg_replace('/'.preg_quote('('.$match.')', '/').'/', '{'.$name.'}', $path, 1);
+                $path = preg_replace('/' . preg_quote('(' . $match . ')', '/') . '/', '{' . $name . '}', $path, 1);
             }
         }
     }
 
     /**
+     * Create data array from Route
      * @param RouteInterface $route
-     * @return array
+     * @return array<string, array<string, array>>
      */
-    public function convert(RouteInterface $route):array
+    public function convert(RouteInterface $route): array
     {
         $openapi = [
             "description" => ""
@@ -125,10 +134,10 @@ class PhalconPath2PathArray implements Path2PathConverter
         $methods = ['get'];
         foreach ((array)$route->getHttpMethods() as $method) {
             $methods[] = strtolower($method);
-            $openapi[strtolower($method)] = $this->merger->merge((array) ($openapi[strtolower($method)]??[]), $data);
+            $openapi[strtolower($method)] = $this->merger->merge((array) ($openapi[strtolower($method)] ?? []), $data);
         }
         foreach (array_unique($methods) as $method) {
-            $openapi[$method] = DefaultResponse::add($openapi[$method]??[]);
+            $openapi[$method] = DefaultResponse::add($openapi[$method] ?? []);
         }
         ksort($openapi);
         return [$path => $openapi];

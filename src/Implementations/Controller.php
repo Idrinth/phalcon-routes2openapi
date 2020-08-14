@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
@@ -9,7 +11,10 @@ use PackageVersions\Versions;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Controller as PhalconController;
 
-class Controller extends PhalconController implements ControllerInterface
+/**
+ * This is the controller, that handles all requests related to the index route
+ */
+final class Controller extends PhalconController implements ControllerInterface
 {
     /**
      * Generates an overview over routes registered
@@ -27,10 +32,11 @@ class Controller extends PhalconController implements ControllerInterface
             ->getCorsEnabledResponse()
             ->setJsonContent(
                 [
+                    'openapi' => '3.0.1',
                     'paths' => $this->di->get(RMI::class)->mergeAll(...$paths),
                     'info' => [
-                        "title"=> Versions::ROOT_PACKAGE_NAME,
-                        "version"=> Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
+                        "title" => Versions::ROOT_PACKAGE_NAME,
+                        "version" => Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
                     ]
                 ]
             );
@@ -48,6 +54,7 @@ class Controller extends PhalconController implements ControllerInterface
 
     /**
      * Generates an overview over routes registered
+     * @suppress PhanPluginDuplicateMethodDescription
      * @return-204 {"type":"string","maxLength":0}
      * @return ResponseInterface
      */
@@ -60,6 +67,7 @@ class Controller extends PhalconController implements ControllerInterface
 
     /**
      * Generates an overview over routes registered
+     * @suppress PhanPluginDuplicateMethodDescription
      * @return-204 {"type":"string","maxLength":0}
      * @return ResponseInterface
      */
@@ -69,6 +77,7 @@ class Controller extends PhalconController implements ControllerInterface
     }
 
     /**
+     * Return the Response with added Cross-Origin-Resource-Sharing-Headers
      * @return ResponseInterface
      */
     private function getCorsEnabledResponse(): ResponseInterface

@@ -12,10 +12,11 @@ cache:
     - ~/cphalcon
 jobs:
   include:
+
 # PHP Linting
     - stage: PHP Linting
-      php: 7.3
-      name: PHP 7.3
+      php: 7.4
+      name: PHP 7.4
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
@@ -43,26 +44,33 @@ jobs:
       install: true
       script:
         - ../tools/vendor/bin/parallel-lint --exclude vendor .
-    - stage: PHP Linting
-      php: 7.1
-      name: PHP 7.1
+
+# Static Code Analysis
+    - stage: Static Code Analysis
+      php: 7.4
+      name: "PHP Codesniffer: PSR12"
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
+        - composer require squizlabs/php_codesniffer:^3.5.6 --working-dir=../tools
       install: true
       script:
-        - ../tools/vendor/bin/parallel-lint --exclude vendor .
-    - stage: PHP Linting
-      php: 7.0
-      name: PHP 7.0
+        - ../tools/vendor/bin/phpcs -p --standard=PSR12 .
+    - stage: Static Code Analysis
+      php: 7.4
+      name: PHAN@4
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require jakub-onderka/php-parallel-lint:^1 --working-dir=../tools
-      install: true
+        - composer require phan/phan --working-dir=../tools
+        - pecl install psr
+        - pecl install ast
+        - sh install-phalcon.sh
+      install:
+        - composer update
       script:
-        - ../tools/vendor/bin/parallel-lint --exclude vendor .
+        - ../tools/vendor/bin/phan
+
 # Unit Tests
     - stage: Test
       php: 7.4
@@ -70,6 +78,7 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install:
         - composer update
@@ -82,6 +91,7 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install:
         - composer update
@@ -94,77 +104,14 @@ jobs:
       before_install:
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require codacy/coverage:dev-master --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install:
         - composer update
       script:
         - vendor/bin/phpunit --testdox --coverage-text --coverage-clover clover.xml --whitelist src/ test/
         - ../tools/vendor/bin/codacycoverage clover clover.xml
-    - stage: Test
-      php: 7.1
-      name: PHP 7.1
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox test/
-    - stage: Test
-      php: 7.0
-      name: PHP 7.0
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - vendor/bin/phpunit --testdox test/
-# Static Code Analysis
-    - stage: Static Code Analysis
-      php: 7.4
-      name: PHP Assumptions
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require rskuipers/php-assumptions:^0.7.0 --working-dir=../tools
-        - sh install-phalcon.sh
-      install: composer update
-      script:
-        - ../tools/vendor/bin/phpa --exclude=./vendor ./
-    - stage: Static Code Analysis
-      php: 7.4
-      name: "PHP Codesniffer: PSR2"
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require squizlabs/php_codesniffer:^3.2.2 --working-dir=../tools
-      install: true
-      script:
-        - ../tools/vendor/bin/phpcs -p --standard=PSR2 .
-    - stage: Static Code Analysis
-      php: 7.4
-      name: Composer Require Checker
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer config repositories.maglnet/composer-require-checker '{"type":"vcs","url":"https://github.com/idrinth/ComposerRequireChecker","no-api":true}' --working-dir=../tools && composer require maglnet/composer-require-checker:dev-bandaid --working-dir=../tools
-        - sh install-phalcon.sh
-      install: composer update
-      script:
-        - ../tools/vendor/bin/composer-require-checker check --register-namespace=nikic/php-parser:PhpParser\\:lib/PhpParser ./composer.json
-    - stage: Static Code Analysis
-      php: 7.4
-      name: PHPstan
-      before_install:
-        - phpenv config-rm xdebug.ini || true
-        - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpstan/phpstan:^0.11 phpstan/phpstan-phpunit phpstan/phpstan-strict-rules:^0.11 --working-dir=../tools
-        - sh install-phalcon.sh
-      install:
-        - composer update
-      script:
-        - ../tools/vendor/bin/phpstan analyse --level max src test
+
 # Pre-Tag
     - stage: Pre-Tag
       php: 7.4
@@ -172,7 +119,8 @@ jobs:
       before_install:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
-        - composer require phpmetrics/phpmetrics:^2.4.1 --working-dir=../tools
+        - composer require phpmetrics/phpmetrics:^2.7.4 --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install:
         - composer update
@@ -185,6 +133,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install: composer update
       script:

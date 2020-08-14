@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi;
 
@@ -11,57 +13,79 @@ use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\PathTargetAnnotationResolver;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
 use Phalcon\Di\ServiceProviderInterface;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\RouterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
-class ServiceProvider implements ServiceProviderInterface
+/**
+ * Registers the controller, the services and the routes
+ * @suppress PhanUnreferencedClass
+ */
+final class ServiceProvider implements ServiceProviderInterface
 {
     /**
      * Registers controller at api-root
      * @param DiInterface $serviceContainer
      * @return void
      */
-    public function register(DiInterface $serviceContainer)
+    public function register(DiInterface $serviceContainer): void
     {
         $this->registerServices($serviceContainer);
         $this->registerRoutes($serviceContainer->get('router'));
     }
 
     /**
+     * Register Services
      * @param DiInterface $serviceContainer
-     * @param string $root
      * @return void
      */
-    private function registerServices(DiInterface $serviceContainer)
+    private function registerServices(DiInterface $serviceContainer): void
     {
-        $serviceContainer->set(Controller::class, function () {
-            return (new ControllerImplementation());
-        });
-        $serviceContainer->set(Path2PathConverter::class, function () use (&$serviceContainer) {
-            return new PhalconPath2PathArray(
-                $serviceContainer->get(PathTargetAnnotationResolver::class),
-                $serviceContainer->get(RecursiveMerger::class)
-            );
-        });
-        $serviceContainer->set(DocBlockFactoryInterface::class, function () {
-            return DocBlockFactory::createInstance();
-        });
-        $serviceContainer->set(PathTargetAnnotationResolver::class, function () use (&$serviceContainer) {
-            return new Reflector(
-                $serviceContainer->get(DocBlockFactoryInterface::class),
-                $serviceContainer->get(RecursiveMerger::class)
-            );
-        });
+        $serviceContainer->set(Controller::class, ControllerImplementation::class);
+        $serviceContainer->set(
+            Path2PathConverter::class,
+            /**
+             * @return Path2PathConverter
+             */
+            function () use (&$serviceContainer): Path2PathConverter {
+                return new PhalconPath2PathArray(
+                    $serviceContainer->get(PathTargetAnnotationResolver::class),
+                    $serviceContainer->get(RecursiveMerger::class)
+                );
+            }
+        );
+        $serviceContainer->set(
+            DocBlockFactoryInterface::class,
+            /**
+             * @return DocBlockFactory
+             */
+            function (): DocBlockFactoryInterface {
+                return DocBlockFactory::createInstance();
+            }
+        );
+        $serviceContainer->set(
+            PathTargetAnnotationResolver::class,
+            /**
+             * Creates a Reflector
+             * @return PathTargetAnnotationResolver
+             */
+            function () use (&$serviceContainer): PathTargetAnnotationResolver {
+                return new Reflector(
+                    $serviceContainer->get(DocBlockFactoryInterface::class),
+                    $serviceContainer->get(RecursiveMerger::class)
+                );
+            }
+        );
         $serviceContainer->set(RecursiveMerger::class, NoValueConversionMerger::class);
     }
 
     /**
+     * Register routes
      * @param RouterInterface $router
      * @return void
      */
-    private function registerRoutes(RouterInterface $router)
+    private function registerRoutes(RouterInterface $router): void
     {
         $router->addGet('/', ['controller' => Controller::class, 'action' => 'index']);
         $router->addOptions('/', ['controller' => Controller::class, 'action' => 'options']);

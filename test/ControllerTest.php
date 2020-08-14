@@ -5,9 +5,10 @@ namespace De\Idrinth\Test\PhalconRoutes2OpenApi;
 use De\Idrinth\PhalconRoutes2OpenApi\Implementations\Controller;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\Path2PathConverter;
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
-use Phalcon\DiInterface;
-use Phalcon\Http\ResponseInterface;
+use PackageVersions\Versions;
+use Phalcon\Di\DiInterface;
 use Phalcon\Http\RequestInterface;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Router\RouteInterface;
 use Phalcon\Mvc\RouterInterface;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
@@ -24,7 +25,9 @@ class ControllerTest extends TestCase
         $router->expects(static::once())
             ->method('getRoutes')
             ->with()
-            ->willReturn([$this->getMockBuilder(RouteInterface::class)->getMock()]);
+            ->willReturn([
+                $this->getMockBuilder(RouteInterface::class)->getMock()
+            ]);
         return $router;
     }
 
@@ -37,12 +40,12 @@ class ControllerTest extends TestCase
             [
                 $this->buildRouterMock(),
                 [
-                    "openapi" => "3.0.1",
-                    "info" => [
-                        "title" => "unknown",
-                        "version" => "1.0.0"
+                    'openapi' => '3.0.1',
+                    'info' => [
+                        'title' => Versions::ROOT_PACKAGE_NAME,
+                        'version' => Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
                     ],
-                    "paths" => [
+                    'paths' => [
                         '/abc' => [
                             'get' => []
                         ]
@@ -52,12 +55,12 @@ class ControllerTest extends TestCase
             [
                 $this->buildRouterMock(),
                 [
-                    "openapi" => "3.0.1",
-                    "info" => [
-                        "title" => "unknown",
-                        "version" => "1.0.0"
+                    'openapi' => '3.0.1',
+                    'info' => [
+                        'title' => Versions::ROOT_PACKAGE_NAME,
+                        'version' => Versions::getVersion(Versions::ROOT_PACKAGE_NAME)
                     ],
-                    "paths" => [
+                    'paths' => [
                         '/abc' => [
                             'get' => []
                         ]
@@ -112,33 +115,8 @@ class ControllerTest extends TestCase
             ->with(new IsInstanceOf(RouteInterface::class))
             ->willReturn(['/abc' => ['get' => []]]);
         $merger                = $this->getMockBuilder(RecursiveMerger::class)->getMock();
-        $merger->expects(static::once())
-            ->method('merge')
-            ->with(
-                [
-                    "openapi"=> "3.0.1",
-                    "info"=> [
-                        "title"=> "unknown",
-                        "version"=> "1.0.0"
-                    ]
-                ],
-                [
-                    "paths" => [
-                        '/abc' => ['get' => []]
-                    ],
-                    "info" => []
-                ]
-            )
-            ->willReturn([
-                "openapi"=> "3.0.1",
-                "info"=> [
-                    "title"=> "unknown",
-                    "version"=> "1.0.0"
-                ],
-                "paths" => [
-                    '/abc' => ['get' => []]
-                ]
-            ]);
+        $merger->expects(static::never())
+            ->method('merge');
         $merger->expects(static::once())
             ->method('mergeAll')
             ->with(['/abc' => ['get' => []]])

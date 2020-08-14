@@ -1,13 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace De\Idrinth\PhalconRoutes2OpenApi\Implementations;
 
 use De\Idrinth\PhalconRoutes2OpenApi\Interfaces\RecursiveMerger;
-use InvalidArgumentException;
 
+/**
+ * Merges multidimensional arrays
+ */
 class NoValueConversionMerger implements RecursiveMerger
 {
     /**
+     * Handles the overwriting and merging of values
+     * @suppress PhanPluginUnknownArrayMethodParamType
      * @param array $array1
      * @param mixed $value
      * @param int|string $key
@@ -25,6 +31,8 @@ class NoValueConversionMerger implements RecursiveMerger
     }
 
     /**
+     * Merges two multidimensional arrays
+     * @suppress PhanPluginUnknownArrayMethodParamType, PhanPluginUnknownArrayMethodReturnType
      * @param array $array1
      * @param array $array2
      * @return array
@@ -38,14 +46,15 @@ class NoValueConversionMerger implements RecursiveMerger
     }
 
     /**
+     * Merges any number of multidimensional arrays with later overwriting earlier
+     * @suppress PhanPluginUnknownArrayMethodParamType, PhanPluginUnknownArrayMethodReturnType
      * @param array[] ...$sets each array to be merged into the first as a parameter
      * @return array
-     * @throws InvalidArgumentException
      */
     public function mergeAll(array ...$sets): array
     {
         $initial = array_shift($sets);
-        foreach ($sets as $pos => $set) {
+        foreach ($sets as $set) {
             $initial = $this->merge($initial, $set);
         }
         return $initial;
