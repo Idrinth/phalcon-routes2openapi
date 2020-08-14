@@ -120,6 +120,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer require phpmetrics/phpmetrics:^2.7.4 --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install:
         - composer update
@@ -132,6 +133,7 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - mkdir ../tools && composer init --name=putg/tools --working-dir=../tools
         - composer create-project tomzx/php-semver-checker-git:^0.7 --working-dir=../tools
+        - pecl install psr
         - sh install-phalcon.sh
       install: composer update
       script:
