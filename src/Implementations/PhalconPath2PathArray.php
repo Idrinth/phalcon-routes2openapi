@@ -131,10 +131,13 @@ final class PhalconPath2PathArray implements Path2PathConverter
             (string) ($route->getPaths()['controller'] ?? ''),
             (string) ($route->getPaths()['action'] ?? '')
         );
-        $methods = ['get'];
+        $methods = [];
         foreach ((array)$route->getHttpMethods() as $method) {
             $methods[] = strtolower($method);
             $openapi[strtolower($method)] = $this->merger->merge((array) ($openapi[strtolower($method)] ?? []), $data);
+        }
+        if (count($methods) === 0) {
+            $methods['get'];
         }
         foreach (array_unique($methods) as $method) {
             $openapi[$method] = DefaultResponse::add($openapi[$method] ?? []);

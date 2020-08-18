@@ -39,10 +39,24 @@ class NoValueConversionMerger implements RecursiveMerger
      */
     public function merge(array $array1, array $array2): array
     {
+        $isNumericKeyed = $this->isNumericKeyed($array1, $array2);
         foreach ($array2 as $key => $value) {
-            is_integer($key) ? $array1[] = $value : $array1[$key] = $this->handleValueMerge($array1, $value, $key);
+            $isNumericKeyed ? $array1[] = $value : $array1[$key] = $this->handleValueMerge($array1, $value, "$key");
         }
         return $array1;
+    }
+
+    /**
+     * @param array<mixed, mixed> $array1
+     * @param array<mixed, mixed> $array2
+     * @return bool
+     */
+    public function isNumericKeyed(array $array1, array $array2): bool
+    {
+        if (implode('#', array_keys($array1)) !== implode('#', array_keys(array_values($array1)))) {
+            return false;
+        }
+        return implode('#', array_keys($array2)) === implode('#', array_keys(array_values($array2)));
     }
 
     /**

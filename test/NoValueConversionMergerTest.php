@@ -14,6 +14,7 @@ class NoValueConversionMergerTest extends TestCase
     {
         return [
             [[], [], []],
+            [[121 => 'a'], [124 => 2], [121 => 'a', 124 => 2]],
             [['abc'], ['qq'], ['abc', 'qq']],
             [['abc' => ['a']], ['abc' => 1], ['abc' => 1]],
             [['a' => ['zz']], ['abv', 'a' => [11]], ['a' => ['zz', 11], 'abv']],
@@ -45,7 +46,7 @@ class NoValueConversionMergerTest extends TestCase
     public function testMergeAll()
     {
         static::assertEquals(
-            ['a' => [1, 2, 4, 'z' => 77], '1hh'],
+            ['1hh', 'a' => [4, 2, 'z' => 77]],
             (new NoValueConversionMerger())->mergeAll(
                 ['a' => [1, 2]],
                 ['a' => [4, 'z' => 11]],
